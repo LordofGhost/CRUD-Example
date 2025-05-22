@@ -1,0 +1,33 @@
+@MyWebApi_HostAddress = http://localhost:5093
+
+### Alle Produkte abrufen
+GET {{MyWebApi_HostAddress}}/api/products
+Accept: application/json
+
+### Ein Produkt abrufen
+GET {{MyWebApi_HostAddress}}/api/products/1
+Accept: application/json
+
+### Neues Produkt erstellen
+POST {{MyWebApi_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Test Produkt",
+  "price": 19.99,
+  "description": "Ein Testprodukt"
+}
+
+### Produkt aktualisieren
+PUT {{MyWebApi_HostAddress}}/api/products/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Aktualisiertes Produkt",
+  "price": 29.99,
+  "description": "Ein aktualisiertes Testprodukt"
+}
+
+### Produkt löschen
+DELETE {{MyWebApi_HostAddress}}/api/products/1

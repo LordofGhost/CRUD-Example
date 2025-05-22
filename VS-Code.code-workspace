@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "MyWebApi"
+		},
+		{
+			"name": "MyDatabase",
+			"path": "MyDatabase"
+		},
+		{
+			"path": "MyReactApp"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}
