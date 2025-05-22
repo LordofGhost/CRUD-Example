@@ -1,6 +1,7 @@
 public class Product
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public Int32 Price { get; set; }
+    // Id can be Null because it is a auto incremnt value in the db
+    public int? Id { get; set; }
+    required public string Name { get; set; }
+    required public Int32 Price { get; set; }
 }
