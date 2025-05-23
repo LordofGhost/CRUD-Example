@@ -17,6 +17,8 @@ function CreateProduct() {
         axios.post(`${path}/api/products`, product)
             .then(response => {
                 console.log('Product created successfully: ', response.data);
+                setName('');
+                setPrice('');
             })
             .catch(error => {
                 console.error('Error creating product: ', error)
@@ -26,6 +28,7 @@ function CreateProduct() {
     return (
         <div>
             <h2>Create Product</h2>
+            <a href="/">Zurück</a>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Name:</label>

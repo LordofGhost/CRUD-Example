@@ -5,10 +5,10 @@ import { useParams } from "react-router-dom";
 
 function EditProduct() {
     const { id } = useParams();
-    const [product, setProduct] = useState({ id:0, name:'', price: ''});
+    const [product, setProduct] = useState({ name:'', price: ''});
 
     useEffect(() => {
-        axios.get(`${path}/api/products/${id}}`)
+        axios.get(`${path}/api/products/${id}`)
             .then(response => {
                 setProduct(response.data);
             })
@@ -20,7 +20,7 @@ function EditProduct() {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        axios.put(`{path}/api/products/${product.id}`)
+        axios.put(`${path}/api/products/${id}`, product)
             .then(response => {
                 console.log('Product updated successfully: ', response);
             })
@@ -32,6 +32,7 @@ function EditProduct() {
     return (
         <div>
             <h2>Edit Product</h2>
+            <a href="/">Zurück</a>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Name:</label>
