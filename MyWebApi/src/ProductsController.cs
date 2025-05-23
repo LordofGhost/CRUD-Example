@@ -56,7 +56,7 @@ public class ProductsController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!ProductExists(product.Id))
+            if (!ProductExists((int)product.Id))
             {
                 return NotFound();
             }
