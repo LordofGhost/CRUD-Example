@@ -7,6 +7,7 @@ public class Product
     required public string Name { get; set; }
     public string? Description { get; set; }
     required public int CategoryId { get; set; }
+    required public int Shelve { get; set; }
     required public int InStock { get; set; }
     required public int OnTheShelf { get; set; }
     required public int Sold { get; set; }
