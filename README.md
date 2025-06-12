@@ -17,6 +17,7 @@ The Api can be tested with `Swagger` at this localhost address `http://localhost
 - [ ] Product categories and multiple types of products
 - [ ] GUI Navbar
 - [ ] Imporve edit / create product pages
+- [ ] Use SQL Lite DB
 
 ## Questions
 
