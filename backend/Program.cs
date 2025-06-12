@@ -42,7 +42,6 @@ if (!app.Environment.IsDevelopment())
 // Map Swagger
 app.UseSwagger();
 app.UseSwaggerUI();
-app.MapStaticAssets();
 app.MapSwagger().RequireAuthorization();
 
 app.UseHttpsRedirection();
