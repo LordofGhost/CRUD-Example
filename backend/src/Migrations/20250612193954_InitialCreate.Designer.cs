@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace MyWebApi.src.Migrations
+namespace SupermarketApi.src.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20250612193954_InitialCreate")]

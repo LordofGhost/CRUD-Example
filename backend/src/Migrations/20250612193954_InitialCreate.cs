@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace MyWebApi.src.Migrations
+namespace SupermarketApi.src.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
