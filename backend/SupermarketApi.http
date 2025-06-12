@@ -1,15 +1,15 @@
-@MyWebApi_HostAddress = http://localhost:5093
+@SupermarketApi_HostAddress = http://localhost:5093
 
 ### Alle Produkte abrufen
-GET {{MyWebApi_HostAddress}}/api/products
+GET {{SupermarketApi_HostAddress}}/api/products
 Accept: application/json
 
 ### Ein Produkt abrufen
-GET {{MyWebApi_HostAddress}}/api/products/1
+GET {{SupermarketApi_HostAddress}}/api/products/1
 Accept: application/json
 
 ### Neues Produkt erstellen
-POST {{MyWebApi_HostAddress}}/api/products
+POST {{SupermarketApi_HostAddress}}/api/products
 Content-Type: application/json
 
 {
@@ -19,7 +19,7 @@ Content-Type: application/json
 }
 
 ### Produkt aktualisieren
-PUT {{MyWebApi_HostAddress}}/api/products/1
+PUT {{SupermarketApi_HostAddress}}/api/products/1
 Content-Type: application/json
 
 {
@@ -30,4 +30,4 @@ Content-Type: application/json
 }
 
 ### Produkt löschen
-DELETE {{MyWebApi_HostAddress}}/api/products/1
+DELETE {{SupermarketApi_HostAddress}}/api/products/1
