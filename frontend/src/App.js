@@ -18,5 +18,4 @@ function App() {
   );
 }
 
-export let path = "http://localhost:5093";
 export default App;

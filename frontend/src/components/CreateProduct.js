@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { path } from '../App'
 import axios from "axios";
 
 function CreateProduct() {
@@ -14,7 +13,7 @@ function CreateProduct() {
             price: price
         };
 
-        axios.post(`${path}/api/products`, product)
+        axios.post(`/api/products`, product)
             .then(response => {
                 console.log('Product created successfully: ', response.data);
                 setName('');

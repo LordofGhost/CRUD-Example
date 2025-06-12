@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { path } from '../App';
 import axios from 'axios';
 
 function ProductList() {
     const [products, setProducts] = useState([]);
 
     useEffect (() => {
-        axios.get(`${path}/api/products`)
+        axios.get(`/api/products`)
             .then(response => {
                 setProducts(response.data);
             })
