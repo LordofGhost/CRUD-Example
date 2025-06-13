@@ -13,13 +13,13 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+    public async Task<ActionResult<IEnumerable<Supermarket.Models.Product>>> GetProducts()
     {
         return await _context.Products.ToListAsync();
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Product>> GetProduct(int id)
+    public async Task<ActionResult<Supermarket.Models.Product>> GetProduct(int id)
     {
         var product = await _context.Products.FindAsync(id);
 
@@ -32,7 +32,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Product>> CreateProduct(Product product)
+    public async Task<ActionResult<Supermarket.Models.Product>> CreateProduct(Supermarket.Models.Product product)
     {
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
@@ -41,7 +41,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProduct(int id, Product product)
+    public async Task<IActionResult> UpdateProduct(int id, Supermarket.Models.Product product)
     {
         if (id != product.Id)
         {
