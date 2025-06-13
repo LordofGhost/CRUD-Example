@@ -1,25 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+namespace Supermarket.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class ProductsController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly Data.ShopDbContext _context;
 
-    public ProductsController(AppDbContext context)
+    public ProductsController(Data.ShopDbContext context)
     {
         _context = context;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Supermarket.Models.Product>>> GetProducts()
+    public async Task<ActionResult<IEnumerable<Models.Product>>> GetProducts()
     {
         return await _context.Products.ToListAsync();
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Supermarket.Models.Product>> GetProduct(int id)
+    public async Task<ActionResult<Models.Product>> GetProduct(int id)
     {
         var product = await _context.Products.FindAsync(id);
 
@@ -32,7 +33,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Supermarket.Models.Product>> CreateProduct(Supermarket.Models.Product product)
+    public async Task<ActionResult<Models.Product>> CreateProduct(Models.Product product)
     {
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
@@ -41,7 +42,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProduct(int id, Supermarket.Models.Product product)
+    public async Task<IActionResult> UpdateProduct(int id, Models.Product product)
     {
         if (id != product.Id)
         {
@@ -56,7 +57,7 @@ public class ProductsController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!ProductExists((int)product.Id))
+            if (!ProductExists(product.Id))
             {
                 return NotFound();
             }
