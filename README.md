@@ -9,6 +9,11 @@
 4. Install frontend by running `npm install` inside the `frontend` folder
 5. Start `MyReactApp` by running `npm run start` inside the `frontend` folder
 
+## Commands
+
+- Create database migrations `dotnet ef migrations add InitialCreate -o src/Migrations`
+- Update database migrations `dotnet ef database update`
+
 ## Debugging
 
 The Api can be tested with `Swagger` at this localhost address `http://localhost:5093/swagger`.
@@ -19,6 +24,7 @@ The Api can be tested with `Swagger` at this localhost address `http://localhost
 - [ ] GUI Navbar
 - [ ] Imporve edit / create product pages
 - [ ] Use SQL Lite DB
+- [ ] Seperate Employees DB
 
 ## Questions
 

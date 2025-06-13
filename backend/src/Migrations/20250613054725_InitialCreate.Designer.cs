@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SupermarketApi.src.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250612193954_InitialCreate")]
+    [Migration("20250613054725_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -30,6 +30,10 @@ namespace SupermarketApi.src.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -65,9 +69,6 @@ namespace SupermarketApi.src.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("OnTheShelf")
-                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("PurchasePrice")
                         .HasColumnType("decimal(6, 2)");

@@ -18,6 +18,7 @@ namespace SupermarketApi.src.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
+                    Password = table.Column<string>(type: "TEXT", nullable: false),
                     Task = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
@@ -50,7 +51,6 @@ namespace SupermarketApi.src.Migrations
                     Category = table.Column<int>(type: "INTEGER", nullable: false),
                     ShelveId = table.Column<int>(type: "INTEGER", nullable: false),
                     InStock = table.Column<int>(type: "INTEGER", nullable: false),
-                    OnTheShelf = table.Column<int>(type: "INTEGER", nullable: false),
                     Sold = table.Column<int>(type: "INTEGER", nullable: false),
                     PurchasePrice = table.Column<decimal>(type: "decimal(6, 2)", nullable: false),
                     SellingPrice = table.Column<decimal>(type: "decimal(6, 2)", nullable: false),
