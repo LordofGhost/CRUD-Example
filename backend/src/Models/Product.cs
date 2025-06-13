@@ -19,7 +19,7 @@ public class Product
     public string? Description { get; set; }
     public string? Image { get; set; }
     required public Category Category { get; set; }
-    required public int ShelveId { get; set; } // foreign key
+    public int? ShelveId { get; set; } // foreign key
     [ForeignKey(nameof(ShelveId))]
     public virtual Shelve? Shelve { get; set; }
     required public int InStock { get; set; }

@@ -73,7 +73,7 @@ namespace SupermarketApi.src.Migrations
                     b.Property<decimal>("SellingPrice")
                         .HasColumnType("decimal(6, 2)");
 
-                    b.Property<int>("ShelveId")
+                    b.Property<int?>("ShelveId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Sold")
@@ -107,9 +107,7 @@ namespace SupermarketApi.src.Migrations
                 {
                     b.HasOne("Supermarket.Models.Shelve", "Shelve")
                         .WithMany("Products")
-                        .HasForeignKey("ShelveId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ShelveId");
 
                     b.Navigation("Shelve");
                 });

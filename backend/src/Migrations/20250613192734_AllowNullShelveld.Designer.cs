@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SupermarketApi.src.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250613182645_UpdateShelveRelation")]
-    partial class UpdateShelveRelation
+    [Migration("20250613192734_AllowNullShelveld")]
+    partial class AllowNullShelveld
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,7 +76,7 @@ namespace SupermarketApi.src.Migrations
                     b.Property<decimal>("SellingPrice")
                         .HasColumnType("decimal(6, 2)");
 
-                    b.Property<int>("ShelveId")
+                    b.Property<int?>("ShelveId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Sold")
@@ -110,9 +110,7 @@ namespace SupermarketApi.src.Migrations
                 {
                     b.HasOne("Supermarket.Models.Shelve", "Shelve")
                         .WithMany("Products")
-                        .HasForeignKey("ShelveId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ShelveId");
 
                     b.Navigation("Shelve");
                 });
