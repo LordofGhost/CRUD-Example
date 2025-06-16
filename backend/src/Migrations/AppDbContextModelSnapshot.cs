@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace SupermarketApi.src.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(Supermarket.Data.ShopDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

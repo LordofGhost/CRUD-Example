@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace SupermarketApi.src.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(Supermarket.Data.ShopDbContext))]
     [Migration("20250613192734_AllowNullShelveld")]
     partial class AllowNullShelveld
     {
