@@ -8,7 +8,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    // Prevent object cycle
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+});
 
 // Create CORS policy
 builder.Services.AddCors(options =>
@@ -23,7 +27,7 @@ builder.Services.AddCors(options =>
 });
 
 // Create DB context
-builder.Services.AddDbContext<AppDbContext>(options =>
+builder.Services.AddDbContext<Supermarket.Data.ShopDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
