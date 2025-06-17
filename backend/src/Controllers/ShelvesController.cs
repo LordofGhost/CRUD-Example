@@ -40,6 +40,36 @@ public class ShelvesController : ControllerBase
 
         return CreatedAtAction(nameof(GetShelve), new { shelf.ShelfId }, shelf);
     }
+
+    [HttpPatch("{ShelfId}")]
+    public async Task<ActionResult<Models.Shelf>> UpdateShelf(int ShelfId, Models.Shelf shelf)
+    {
+        if (ShelfId != shelf.ShelfId)
+        {
+            return BadRequest();
+        }
+
+        _context.Entry(shelf).State = EntityState.Modified;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ShelfExists(shelf.ShelfId))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        return CreatedAtAction(nameof(GetShelve), new { shelf.ShelfId }, shelf);
+    }
+
     private bool ShelfExists(int ShelfId)
     {
         return _context.Shelves.Any(e => e.ShelfId == ShelfId);

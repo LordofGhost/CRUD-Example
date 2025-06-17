@@ -49,7 +49,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPatch("{ProductId}")]
-    public async Task<IActionResult> UpdateProduct(int ProductId, Models.Product product)
+    public async Task<ActionResult<Models.Product>> UpdateProduct(int ProductId, Models.Product product)
     {
         if (ProductId != product.ProductId)
         {
