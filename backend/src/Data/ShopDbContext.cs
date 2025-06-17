@@ -15,6 +15,12 @@ public class ShopDbContext : DbContext
             .WithMany(s => s.Products)
             .HasForeignKey(p => p.ShelfId);
 
+        modelBuilder.Entity<Models.Shelf>()
+            .HasMany(s => s.Products)
+            .WithOne(p => p.Shelf)
+            .HasForeignKey(p => p.ShelfId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         base.OnModelCreating(modelBuilder);
     }
 }

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Supermarket.Models;
 
@@ -19,8 +20,9 @@ public class Product
     public string? Description { get; set; }
     public string? Image { get; set; }
     required public Category Category { get; set; }
+    [ForeignKey(nameof(Shelf))]
     public int? ShelfId { get; set; }
-    [ForeignKey(nameof(ShelfId))]
+    [DeleteBehavior(DeleteBehavior.SetNull)]
     public virtual Shelf? Shelf { get; set; }
     required public int InStock { get; set; }
     required public int Sold { get; set; }

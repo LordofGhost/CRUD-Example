@@ -70,6 +70,22 @@ public class ShelvesController : ControllerBase
         return CreatedAtAction(nameof(GetShelve), new { shelf.ShelfId }, shelf);
     }
 
+    [HttpDelete("{ShelfId}")]
+    public async Task<IActionResult> DeleteShelf(int ShelfId)
+    {
+        var shelf = await _context.Shelves.FindAsync(ShelfId);
+
+        if (shelf == null)
+        {
+            return NotFound();
+        }
+
+        _context.Shelves.Remove(shelf);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
     private bool ShelfExists(int ShelfId)
     {
         return _context.Shelves.Any(e => e.ShelfId == ShelfId);
