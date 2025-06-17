@@ -8,11 +8,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add services to the container.
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    // Prevent object cycle
-    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-});
+builder.Services.AddControllers();
 
 // Create CORS policy
 builder.Services.AddCors(options =>
