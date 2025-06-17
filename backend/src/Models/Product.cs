@@ -14,14 +14,14 @@ public enum Category
 public class Product
 {
     [Key]
-    public int Id { get; set; }
+    public int ProductId { get; set; }
     required public string Name { get; set; }
     public string? Description { get; set; }
     public string? Image { get; set; }
     required public Category Category { get; set; }
-    public int? ShelveId { get; set; } // foreign key
-    [ForeignKey(nameof(ShelveId))]
-    public virtual Shelve? Shelve { get; set; }
+    public int? ShelfId { get; set; }
+    [ForeignKey(nameof(ShelfId))]
+    public virtual Shelf? Shelf { get; set; }
     required public int InStock { get; set; }
     required public int Sold { get; set; }
     [Column(TypeName = "decimal(6, 2)")]
@@ -30,5 +30,4 @@ public class Product
     required public decimal SellingPrice { get; set; }
     [Column(TypeName = "decimal(6, 2)")]
     required public decimal TaxRate { get; set; }
-    required public bool IsActive { get; set; }
 }

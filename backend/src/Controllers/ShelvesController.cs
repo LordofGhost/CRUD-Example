@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 namespace Supermarket.Controllers;
 
 [ApiController]
@@ -12,10 +13,16 @@ public class ShelvesController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("{Id}")]
-    public async Task<ActionResult<Models.Shelve>> GetShelve(int Id)
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Models.Shelf>>> GetShelves(int ShelfId)
     {
-        var shelve = await _context.Shelves.FindAsync(Id);
+        return await _context.Shelves.ToListAsync();
+    }
+
+    [HttpGet("{ShelfId}")]
+    public async Task<ActionResult<Models.Shelf>> GetShelve(int ShelfId)
+    {
+        var shelve = await _context.Shelves.FindAsync(ShelfId);
 
         if (shelve == null)
         {
@@ -26,12 +33,16 @@ public class ShelvesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Models.Shelve>> CreateShelve(Models.Shelve shelve)
+    public async Task<ActionResult<Models.Shelf>> CreateShelve(Models.Shelf shelf)
     {
-        _context.Add(shelve);
+        _context.Add(shelf);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetShelve), new { id = shelve.Id }, shelve);
+        return CreatedAtAction(nameof(GetShelve), new { shelf.ShelfId }, shelf);
     }
-
+    private bool ShelfExists(int ShelfId)
+    {
+        return _context.Shelves.Any(e => e.ShelfId == ShelfId);
+    }
+    public int test;
 }
