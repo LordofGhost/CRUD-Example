@@ -28,6 +28,8 @@ The Api can be tested with `Swagger` at this localhost address `http://localhost
 
 ## Questions
 
+- How can I represent a model relation correctly in EF
+
 ## Credits
 
 This Project is a modify version of the one shown in this [Post](https://medium.com/@hassanjabbar2017/performing-crud-operations-using-react-with-net-core-a-step-by-step-guide-0176efa86934).
