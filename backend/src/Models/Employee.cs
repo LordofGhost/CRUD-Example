@@ -1,18 +1,18 @@
 
 namespace Supermarket.Models;
 
-public enum Task
+public enum Job
 {
-    Manager,
-    StockTheShelves,
-    Cashier
+    ShelfFiller,
+    Cashier,
+    Manager
 }
 
 public class Employee
 {
-    public int? Id { get; set; }
+    public int? EmployeeId { get; set; }
     required public string FirstName { get; set; }
     required public string LastName { get; set; }
     required public string Password { get; set; }
-    public Task? Task { get; set; }
+    public Job? Job { get; set; }
 }
