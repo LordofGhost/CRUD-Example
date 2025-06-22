@@ -22,9 +22,13 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Create DB context
+// Add shop database context
 builder.Services.AddDbContext<Supermarket.Data.ShopDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("ShopDbConnection")));
+
+// Add user database context
+builder.Services.AddDbContext<Supermarket.Data.UserDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("UserDbConnection")));
 
 var app = builder.Build();
 
