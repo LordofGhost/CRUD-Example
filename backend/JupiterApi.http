@@ -1,33 +1,55 @@
 @JupiterApi_HostAddress = http://localhost:5093
 
-### Alle Produkte abrufen
+### Login as Admin
+POST {{JupiterApi_HostAddress}}/api/Employees/login
+Content-Type: application/json
+
+{
+  "email": "admin@jupiter.com",
+  "passwordHash": "AdminPassword123!"
+}
+
+### Get all Employees
+GET {{JupiterApi_HostAddress}}/api/Employees
+Accept: application/json
+
+### Get all Admin Employee
+GET {{JupiterApi_HostAddress}}/api/Employees/admin@jupiter.com
+Accept: application/json
+
+### Create User
+POST {{JupiterApi_HostAddress}}/api/Employees/register
+Content-Type: application/json
+
+{
+  "FirstName": "Andreas",
+  "LastName": "Boehm",
+  "PasswordHash": "AndreasPassword0!"
+}
+
+### Get
+GET {{JupiterApi_HostAddress}}/api/Employees/me
+Accept: application/json
+
+### Set User as Manager
+PATCH {{JupiterApi_HostAddress}}/api/Employees/Manager
+Content-Type: application/json
+
+{
+  "email": "andreas.boehm@jupiter.com"
+}
+
+### Get User role
+GET {{JupiterApi_HostAddress}}/api/Employees/role/andreas.boehm@jupiter.com
+
+### Delete User
+DELETE {{JupiterApi_HostAddress}}/api/Employees/andreas.boehm@jupiter.com
+Accept: application/json
+
+### Get all Products
 GET {{JupiterApi_HostAddress}}/api/products
 Accept: application/json
 
-### Ein Produkt abrufen
-GET {{JupiterApi_HostAddress}}/api/products/1
-Accept: application/json
-
-### Neues Produkt erstellen
-POST {{JupiterApi_HostAddress}}/api/products
+### Logout
+POST {{JupiterApi_HostAddress}}/api/Employees/logout
 Content-Type: application/json
-
-{
-  "name": "Test Produkt",
-  "price": 19.99,
-  "description": "Ein Testprodukt"
-}
-
-### Produkt aktualisieren
-PUT {{JupiterApi_HostAddress}}/api/products/1
-Content-Type: application/json
-
-{
-  "id": 1,
-  "name": "Aktualisiertes Produkt",
-  "price": 29.99,
-  "description": "Ein aktualisiertes Testprodukt"
-}
-
-### Produkt löschen
-DELETE {{JupiterApi_HostAddress}}/api/products/1
