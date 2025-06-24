@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-namespace Supermarket.Models;
+namespace Jupiter.Models;
 
 public enum Job
 {

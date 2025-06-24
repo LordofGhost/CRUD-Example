@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Supermarket.Models;
+namespace Jupiter.Models;
 
 public class Shelf
 {

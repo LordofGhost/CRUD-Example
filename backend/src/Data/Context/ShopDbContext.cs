@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-namespace Supermarket.Data.Context;
+namespace Jupiter.Data.Context;
 
 public class ShopDbContext : DbContext
 {

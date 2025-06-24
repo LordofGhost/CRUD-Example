@@ -33,14 +33,14 @@ builder.Services.AddIdentityApiEndpoints<IdentityUser>(options =>
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
 })
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<Supermarket.Data.Context.UserDbContext>();
+    .AddEntityFrameworkStores<Jupiter.Data.Context.UserDbContext>();
 
 // Add shop database context
-builder.Services.AddDbContext<Supermarket.Data.Context.ShopDbContext>(options =>
+builder.Services.AddDbContext<Jupiter.Data.Context.ShopDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("ShopDbConnection")));
 
 // Add user database context
-builder.Services.AddDbContext<Supermarket.Data.Context.UserDbContext>(options =>
+builder.Services.AddDbContext<Jupiter.Data.Context.UserDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("UserDbConnection")));
 
 var app = builder.Build();
@@ -52,8 +52,8 @@ using (var scope = app.Services.CreateScope())
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
 
-    await Supermarket.Data.Seeders.RoleSeeder.SeedRoles(roleManager);
-    await Supermarket.Data.Seeders.AdminSeeder.SeedAdmin(userManager);
+    await Jupiter.Data.Seeders.RoleSeeder.SeedRoles(roleManager);
+    await Jupiter.Data.Seeders.AdminSeeder.SeedAdmin(userManager);
 }
 
 // CORS aktivieren

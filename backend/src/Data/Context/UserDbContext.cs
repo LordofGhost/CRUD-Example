@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-namespace Supermarket.Data.Context;
+namespace Jupiter.Data.Context;
 
 public class UserDbContext : IdentityDbContext<IdentityUser>
 {

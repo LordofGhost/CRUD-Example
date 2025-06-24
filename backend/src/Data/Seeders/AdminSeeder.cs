@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace Supermarket.Data.Seeders;
+namespace Jupiter.Data.Seeders;
 
 public class AdminSeeder
 {

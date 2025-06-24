@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-namespace Supermarket.Controllers;
+namespace Jupiter.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

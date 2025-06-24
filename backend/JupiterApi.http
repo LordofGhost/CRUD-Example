@@ -1,15 +1,15 @@
-@SupermarketApi_HostAddress = http://localhost:5093
+@JupiterApi_HostAddress = http://localhost:5093
 
 ### Alle Produkte abrufen
-GET {{SupermarketApi_HostAddress}}/api/products
+GET {{JupiterApi_HostAddress}}/api/products
 Accept: application/json
 
 ### Ein Produkt abrufen
-GET {{SupermarketApi_HostAddress}}/api/products/1
+GET {{JupiterApi_HostAddress}}/api/products/1
 Accept: application/json
 
 ### Neues Produkt erstellen
-POST {{SupermarketApi_HostAddress}}/api/products
+POST {{JupiterApi_HostAddress}}/api/products
 Content-Type: application/json
 
 {
@@ -19,7 +19,7 @@ Content-Type: application/json
 }
 
 ### Produkt aktualisieren
-PUT {{SupermarketApi_HostAddress}}/api/products/1
+PUT {{JupiterApi_HostAddress}}/api/products/1
 Content-Type: application/json
 
 {
@@ -30,4 +30,4 @@ Content-Type: application/json
 }
 
 ### Produkt löschen
-DELETE {{SupermarketApi_HostAddress}}/api/products/1
+DELETE {{JupiterApi_HostAddress}}/api/products/1
