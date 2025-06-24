@@ -24,7 +24,7 @@ builder.Services.AddCors(options =>
 
 // Add authentication
 builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<IdentityUser>(options =>
+builder.Services.AddIdentityApiEndpoints<Jupiter.Models.Employee>(options =>
 {
     options.SignIn.RequireConfirmedEmail = false;
     options.User.RequireUniqueEmail = true;
@@ -50,7 +50,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+    var userManager = services.GetRequiredService<UserManager<Jupiter.Models.Employee>>();
 
     await Jupiter.Data.Seeders.RoleSeeder.SeedRoles(roleManager);
     await Jupiter.Data.Seeders.AdminSeeder.SeedAdmin(userManager);
@@ -77,7 +77,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllers().RequireAuthorization();
+app.MapControllers();
 
 app.Run();
 

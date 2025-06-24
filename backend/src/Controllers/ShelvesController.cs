@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 namespace Jupiter.Controllers;
 
@@ -14,12 +15,14 @@ public class ShelvesController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<Models.Shelf>>> GetShelves(int ShelfId)
     {
         return await _context.Shelves.ToListAsync();
     }
 
     [HttpGet("{ShelfId}")]
+    [Authorize]
     public async Task<ActionResult<Models.Shelf>> GetShelve(int ShelfId)
     {
         var shelve = await _context.Shelves.FindAsync(ShelfId);
@@ -33,6 +36,7 @@ public class ShelvesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Manager")]
     public async Task<ActionResult<Models.Shelf>> CreateShelve(Models.Shelf shelf)
     {
         _context.Add(shelf);
@@ -42,6 +46,7 @@ public class ShelvesController : ControllerBase
     }
 
     [HttpPatch("{ShelfId}")]
+    [Authorize(Roles = "Manager")]
     public async Task<ActionResult<Models.Shelf>> UpdateShelf(int ShelfId, Models.Shelf shelf)
     {
         if (ShelfId != shelf.ShelfId)
@@ -71,6 +76,7 @@ public class ShelvesController : ControllerBase
     }
 
     [HttpDelete("{ShelfId}")]
+    [Authorize(Roles = "Manager")]
     public async Task<IActionResult> DeleteShelf(int ShelfId)
     {
         var shelf = await _context.Shelves.FindAsync(ShelfId);

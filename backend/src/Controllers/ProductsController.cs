@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 namespace Jupiter.Controllers;
 
@@ -14,6 +15,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<Models.Product>>> GetProducts()
     {
         return await _context.Products.ToListAsync();
@@ -34,6 +36,7 @@ public class ProductsController : ControllerBase
 
     // When creating a product the Shelf attribute should always be null, because otherwise a cycle is created and a 400 Error is sent
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<Models.Product>> CreateProduct(Models.Product product)
     {
         // Check if Shelf exists
@@ -49,6 +52,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPatch("{ProductId}")]
+    [Authorize]
     public async Task<ActionResult<Models.Product>> UpdateProduct(int ProductId, Models.Product product)
     {
         if (ProductId != product.ProductId)
@@ -78,6 +82,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("{ProductId}")]
+    [Authorize(Roles = "Manager")]
     public async Task<IActionResult> DeleteProduct(int ProductId)
     {
         var product = await _context.Products.FindAsync(ProductId);
