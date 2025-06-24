@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Connections;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,15 +22,39 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Add authentication
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<IdentityUser>(options =>
+{
+    options.SignIn.RequireConfirmedEmail = false;
+    options.User.RequireUniqueEmail = true;
+
+    // @ sign is required because email and username are identical
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+})
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<Supermarket.Data.Context.UserDbContext>();
+
 // Add shop database context
-builder.Services.AddDbContext<Supermarket.Data.ShopDbContext>(options =>
+builder.Services.AddDbContext<Supermarket.Data.Context.ShopDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("ShopDbConnection")));
 
 // Add user database context
-builder.Services.AddDbContext<Supermarket.Data.UserDbContext>(options =>
+builder.Services.AddDbContext<Supermarket.Data.Context.UserDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("UserDbConnection")));
 
 var app = builder.Build();
+
+// Database seeder
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+
+    await Supermarket.Data.Seeders.RoleSeeder.SeedRoles(roleManager);
+    await Supermarket.Data.Seeders.AdminSeeder.SeedAdmin(userManager);
+}
 
 // CORS aktivieren
 app.UseCors("AllowReactApp");
@@ -39,7 +63,6 @@ app.UseCors("AllowReactApp");
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -54,7 +77,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllers().RequireAuthorization();
 
 app.Run();
 
