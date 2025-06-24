@@ -47,7 +47,7 @@ DELETE {{JupiterApi_HostAddress}}/api/Employees/andreas.boehm@jupiter.com
 Accept: application/json
 
 ### Get all Products
-GET {{JupiterApi_HostAddress}}/api/products
+GET {{JupiterApi_HostAddress}}/api/products?category=1
 Accept: application/json
 
 ### Logout

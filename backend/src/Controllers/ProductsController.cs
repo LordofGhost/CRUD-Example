@@ -16,9 +16,18 @@ public class ProductsController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<ActionResult<IEnumerable<Models.Product>>> GetProducts()
+    public async Task<ActionResult<IEnumerable<Models.Product>>> GetProducts(
+        [FromQuery] Models.Category? category = null
+    )
     {
-        return await _context.Products.ToListAsync();
+        IQueryable<Models.Product> query = _context.Products;
+
+        if (category != null)
+        {
+            query = query.Where(p => p.Category == category);
+        }
+
+        return await query.ToListAsync();
     }
 
     [HttpGet("{ProductId}")]
