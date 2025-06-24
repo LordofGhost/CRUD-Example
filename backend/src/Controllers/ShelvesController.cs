@@ -6,9 +6,9 @@ namespace Supermarket.Controllers;
 [Route("api/[controller]")]
 public class ShelvesController : ControllerBase
 {
-    private readonly Data.ShopDbContext _context;
+    private readonly Data.Context.ShopDbContext _context;
 
-    public ShelvesController(Data.ShopDbContext context)
+    public ShelvesController(Data.Context.ShopDbContext context)
     {
         _context = context;
     }
