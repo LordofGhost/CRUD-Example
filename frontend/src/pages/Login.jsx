@@ -18,8 +18,8 @@ function Login() {
         <div className="flex flex-col shadow-lg rounded-lg w-full max-w-md p-10 mx-4">
           <h2 className="text-center font-semibold text-2xl mb-3">Anmeldung</h2>
           <div className="text-center mb-8">
-            Bitte geben sie ihre Anmeldedaten ein die Sie von ihrem Vorgesetzten
-            erhalten habe.
+            Bitte geben sie ihre Anmeldedaten ein, die Sie von ihrem
+            Vorgesetzten erhalten habe.
           </div>
           <input
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 transition-all mb-5"
