@@ -13,7 +13,7 @@
 
 - Create database migrations for UserDb `dotnet ef migrations add InitialCreate --context UserDbContext -o src/Migrations/User`
 - Update database migrations for UserDb `dotnet ef database update --context UserDbContext`
-- Create database migrations for ShopDb `dotnet ef migrations add InitialCreate --context ShopDbContext -o src/Migrations/User`
+- Create database migrations for ShopDb `dotnet ef migrations add InitialCreate --context ShopDbContext -o src/Migrations/Shop`
 - Update database migrations for ShopDb `dotnet ef database update --context ShopDbContext`
 
 ## Debugging
@@ -31,6 +31,7 @@ The Api can be tested with `Swagger` at this localhost address `http://localhost
 ## Questions
 
 - How can I represent a model relation correctly in EF
+- How does the identity system work
 
 ## Credits
 
