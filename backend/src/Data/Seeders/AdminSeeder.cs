@@ -11,6 +11,7 @@ public class AdminSeeder
         {
             Email = "admin@jupiter.com",
             UserName = "admin@jupiter.com",
+            LastName = "Admin",
             EmailConfirmed = false
         };
 
