@@ -30,7 +30,7 @@ export const getEmployee = async (email) => {
   }
 };
 
-export const patchEmployee = async (email, firstName, lastName, role) => {
+export const editEmployee = async (email, firstName, lastName, role) => {
   try {
     const response = await fetch(`api/Employees/${email}`, {
       method: "PATCH",
