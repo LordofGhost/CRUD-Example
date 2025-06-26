@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { logout, getMyName } from "../../services/Employees";
-import { useEffect, useState } from "react";
+import { logout } from "../../services/Employees";
+import { getMe } from "../../services/Employees";
+import { useEffect, useState, useCallback } from "react";
 
 function Header({ PageName }) {
   const navigate = useNavigate();
@@ -8,23 +9,29 @@ function Header({ PageName }) {
   const currentPath = location.pathname;
   const [employeeName, setEmployeeName] = useState("");
 
-  useEffect(() => {
-    getMyName().then((name) => {
-      if (name == null) {
-        if (currentPath !== "/") {
-          navigate("/");
-        } else {
-          setEmployeeName("");
-        }
+  const updateName = useCallback(async () => {
+    const user = await getMe();
+
+    if (user == null) {
+      if (currentPath !== "/") {
+        navigate("/");
       } else {
-        setEmployeeName(name);
+        setEmployeeName("");
       }
-    });
+    } else {
+      setEmployeeName(user.firstName + " " + user.lastName);
+    }
   }, [currentPath, navigate]);
 
+  useEffect(() => {
+    updateName();
+  }, [updateName]);
+
   function handleLogout() {
+    setEmployeeName("");
     logout();
     navigate("/");
+    setEmployeeName("");
   }
 
   return (
