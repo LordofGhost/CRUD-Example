@@ -11,6 +11,7 @@ public class AdminSeeder
         {
             Email = "admin@jupiter.com",
             UserName = "admin@jupiter.com",
+            FirstName = " ",
             LastName = "Admin",
             EmailConfirmed = false
         };
@@ -20,7 +21,7 @@ public class AdminSeeder
 
         if (user == null)
         {
-            await userManager.CreateAsync(adminUser, "AdminPassword123!");
+            await userManager.CreateAsync(adminUser, "Start123!");
 
             await userManager.AddToRoleAsync(adminUser, "Manager");
         }

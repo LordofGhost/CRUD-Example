@@ -1,3 +1,4 @@
+using System.Net.Mail;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,109 +20,64 @@ public class EmployeesController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "Manager")]
-    public async Task<ActionResult<IEnumerable<Models.Employee>>> GetEmployees()
+    public async Task<ActionResult<IEnumerable<Models.EmployeeRequest>>> GetEmployees()
     {
         var users = await _userManager.Users.ToListAsync();
-        var userWithRoles = new List<object>();
+        var usersWithRoles = new List<object>();
 
         foreach (var user in users)
         {
-            var roles = await _userManager.GetRolesAsync(user);
-            string? role = roles.ElementAtOrDefault(0);
-
-            userWithRoles.Add(new
-            {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Role = role
-            });
+            usersWithRoles.Add(await createUserWithRoles(user));
         }
 
-        return Ok(userWithRoles);
+        return Ok(usersWithRoles);
     }
 
     [HttpGet("{employeeEMail}")]
     [Authorize(Roles = "Manager")]
-    public async Task<ActionResult<Models.Employee>> GetEmployee(string employeeEMail)
-    {
-        var user = await _userManager.FindByEmailAsync(employeeEMail.ToUpper());
-
-        if (user == null)
-        {
-            return NotFound("This Employee doens't exists!");
-        }
-
-        var roles = await _userManager.GetRolesAsync(user);
-        string? role = roles.ElementAtOrDefault(0);
-
-        return Ok(new
-        {
-            Id = user.Id,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Email = user.Email,
-            Role = role
-        });
-    }
-
-    [HttpGet("me")]
-    [Authorize]
-    public async Task<ActionResult<Models.Employee>> GetMe()
-    {
-        var userEmail = User.Identity?.Name;
-        if (string.IsNullOrEmpty(userEmail))
-        {
-            return Unauthorized();
-        }
-
-        var user = await _userManager.FindByNameAsync(userEmail);
-        if (user == null)
-        {
-            return NotFound("This Employee doens't exists!");
-        }
-
-        var roles = await _userManager.GetRolesAsync(user);
-        string? role = roles.ElementAtOrDefault(0);
-
-        return Ok(new
-        {
-            Id = user.Id,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Email = user.Email,
-            Role = role
-        });
-    }
-
-    [HttpGet("role/{employeeEMail}")]
-    [Authorize(Roles = "Manager")]
-    public async Task<ActionResult<string>> GetEmployeeRole(string employeeEMail)
+    public async Task<ActionResult<Models.EmployeeRequest>> GetEmployee(string employeeEMail)
     {
         var user = await _userManager.FindByEmailAsync(employeeEMail.ToUpper());
 
         if (user == null) return NotFound("This Employee doens't exists!");
 
-        var roles = await _userManager.GetRolesAsync(user);
-        string? role = roles.ElementAtOrDefault(0);
+        return Ok(await createUserWithRoles(user));
+    }
 
-        return Ok(role);
+    [HttpGet("me")]
+    [Authorize]
+    public async Task<ActionResult<Models.EmployeeRequest>> GetMe()
+    {
+        var userEmail = User.Identity?.Name;
+        if (string.IsNullOrEmpty(userEmail)) return Unauthorized();
+
+        var user = await _userManager.FindByNameAsync(userEmail);
+
+        if (user == null) return NotFound("This Employee doens't exists!");
+
+        return Ok(await createUserWithRoles(user));
     }
 
     [HttpPost("register")]
     [Authorize(Roles = "Manager")]
-    public async Task<IActionResult> Register(Models.Employee employee)
+    public async Task<IActionResult> Register(Models.RegisterRequest request)
     {
         if (ModelState.IsValid)
         {
-            employee.Email = $"{employee.FirstName}.{employee.LastName}@jupiter.com";
-            employee.UserName = employee.Email.ToLower();
-            var result = await _userManager.CreateAsync(employee);
+            var employee = new Models.Employee
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = $"{request.FirstName}.{request.LastName}@jupiter.com",
+                UserName = $"{request.FirstName}.{request.LastName}@jupiter.com".ToLower()
+            };
+
+            var result = await _userManager.CreateAsync(employee, request.Password);
+            await _userManager.AddToRoleAsync(employee, request.Role);
 
             if (result.Succeeded)
             {
-                return Ok("The user " + employee.FirstName + " " + employee.LastName + " was succesfully created!");
+                return Ok($"User {employee.FirstName} {employee.LastName} was successfully created!");
             }
 
             foreach (var error in result.Errors)
@@ -135,19 +91,13 @@ public class EmployeesController : ControllerBase
 
     [HttpPost("login")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login(Models.Employee employee)
+    public async Task<IActionResult> Login(Models.LoginRequest request)
     {
-        if (employee.Email == null || employee.PasswordHash == null)
-        {
-            return Unauthorized("Invalid login attempt.");
-        }
+        if (request.Email == null || request.Password == null) return Unauthorized("Invalid login attempt.");
 
-        var result = await _signInManager.PasswordSignInAsync(employee.Email.ToLower(), employee.PasswordHash, isPersistent: false, lockoutOnFailure: false);
+        var result = await _signInManager.PasswordSignInAsync(request.Email.ToLower(), request.Password, isPersistent: false, lockoutOnFailure: false);
 
-        if (result.Succeeded)
-        {
-            return Ok("The user " + employee.Email + " was succesfully logged in!");
-        }
+        if (result.Succeeded) return Ok("The user " + request.Email + " was succesfully logged in!");
 
         return Unauthorized("Invalid login attempt.");
     }
@@ -160,21 +110,27 @@ public class EmployeesController : ControllerBase
         return Ok();
     }
 
-    [HttpPatch("{role}")]
+    [HttpPatch("{employeeEMail}")]
     [Authorize(Roles = "Manager")]
-    public async Task<ActionResult<Models.Employee>> UpdateEmployee(string role, Models.Employee newEmployee)
+    public async Task<ActionResult<Models.EmployeeRequest>> UpdateEmployee(string employeeEMail, Models.EmployeeRequest request)
     {
-        if (newEmployee.Email == null) return NotFound();
-        var employee = await _userManager.FindByEmailAsync(newEmployee.Email);
-
+        var employee = await _userManager.FindByEmailAsync(employeeEMail);
         if (employee == null) return NotFound();
-        IList<string> currentRoles = await _userManager.GetRolesAsync(employee);
-        // Remove old roles
-        await _userManager.RemoveFromRolesAsync(employee, currentRoles);
-        // Add new role
-        await _userManager.AddToRoleAsync(employee, role);
 
-        return Ok(employee.Email + " is now " + role);
+        // Set role
+        IList<string> currentRoles = await _userManager.GetRolesAsync(employee);
+        await _userManager.RemoveFromRolesAsync(employee, currentRoles);
+        await _userManager.AddToRoleAsync(employee, request.Role);
+
+        employee.FirstName = request.FirstName;
+        employee.LastName = request.LastName;
+        employee.Email = $"{request.FirstName}.{request.LastName}@jupiter.com";
+        employee.UserName = $"{request.FirstName}.{request.LastName}@jupiter.com".ToLower();
+
+        // Update employee
+        await _userManager.UpdateAsync(employee);
+
+        return Ok(await createUserWithRoles(employee));
     }
 
     [HttpDelete("{employeeEMail}")]
@@ -183,18 +139,26 @@ public class EmployeesController : ControllerBase
     {
         var employee = await _userManager.FindByEmailAsync(employeeEMail);
 
-        // In case the employee with the given email doesn't exist
-        if (employee == null)
-        {
-            return NotFound();
-        }
+        if (employee == null) return NotFound();
 
         var result = await _userManager.DeleteAsync(employee);
-        if (!result.Succeeded)
-        {
-            return BadRequest(result.Errors);
-        }
+
+        if (!result.Succeeded) return BadRequest(result.Errors);
 
         return NoContent();
+    }
+
+    private async Task<Models.EmployeeRequest> createUserWithRoles(Models.Employee user)
+    {
+        var roles = await _userManager.GetRolesAsync(user);
+        string? role = roles.ElementAtOrDefault(0);
+
+        return new Models.EmployeeRequest
+        {
+            FirstName = user.FirstName ?? " ",
+            LastName = user.LastName ?? " ",
+            Email = user.Email ?? " ",
+            Role = role ?? " "
+        };
     }
 }
