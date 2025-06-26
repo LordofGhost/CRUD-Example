@@ -1,5 +1,5 @@
 export const login = async (email, password) => {
-  await fetch("/api/Employees/login", {
+  const response = await fetch("/api/Employees/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -9,19 +9,20 @@ export const login = async (email, password) => {
       passwordHash: password,
     }),
   });
+
+  return response.ok;
 };
 
 export const logout = async () => {
-  const response = await fetch("/api/Employees/logout", {
+  await fetch("/api/Employees/logout", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
   });
-  console.log(response);
 };
 
-export const getMyName = async () => {
+export const getMe = async () => {
   const response = await fetch("/api/Employees/me", {
     method: "GET",
     headers: {
@@ -30,12 +31,26 @@ export const getMyName = async () => {
     credentials: "include",
   });
 
-  if (
-    !response.ok ||
-    !response.headers.get("content-type").includes("application/json")
-  )
-    return null;
+  if (!response.ok) return null;
 
-  const data = await response.json();
-  return data.firstName + " " + data.lastName;
+  return await response.json();
+};
+
+export const navigateToPage = async (navigate) => {
+  getMe().then((me) => {
+    switch (me.role) {
+      case "Manager":
+        navigate("/administration");
+        break;
+      case "Cashier":
+        navigate("/CashRegister");
+        break;
+      case "ShelfFiller":
+        navigate("/Warehouse");
+        break;
+      default:
+        navigate("/");
+        break;
+    }
+  });
 };
