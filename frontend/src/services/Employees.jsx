@@ -1,56 +1,50 @@
 export const login = async (email, password) => {
-  const response = await fetch("/api/Employees/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: email,
-      passwordHash: password,
-    }),
-  });
-
-  return response.ok;
+  try {
+    const response = await fetch("/api/Employees/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        passwordHash: password,
+      }),
+    });
+    return response.ok;
+  } catch (error) {
+    console.error("User could not be logged in: " + error);
+    return false;
+  }
 };
 
 export const logout = async () => {
-  await fetch("/api/Employees/logout", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  try {
+    await fetch("/api/Employees/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error) {
+    console.error("Failed to logout user: " + error);
+  }
 };
 
 export const getMe = async () => {
-  const response = await fetch("/api/Employees/me", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  });
+  try {
+    const response = await fetch("/api/Employees/me", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
 
-  if (!response.ok) return null;
+    if (!response.ok) return null;
 
-  return await response.json();
-};
-
-export const navigateToPage = async (navigate) => {
-  getMe().then((me) => {
-    switch (me.role) {
-      case "Manager":
-        navigate("/administration");
-        break;
-      case "Cashier":
-        navigate("/CashRegister");
-        break;
-      case "ShelfFiller":
-        navigate("/Warehouse");
-        break;
-      default:
-        navigate("/");
-        break;
-    }
-  });
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to get user data:", error);
+    return null;
+  }
 };
