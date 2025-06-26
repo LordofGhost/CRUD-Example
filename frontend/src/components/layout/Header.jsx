@@ -27,11 +27,9 @@ function Header({ PageName }) {
     updateName();
   }, [updateName]);
 
-  function handleLogout() {
-    setEmployeeName("");
-    logout();
+  async function handleLogout() {
+    await logout();
     navigate("/");
-    setEmployeeName("");
   }
 
   return (
