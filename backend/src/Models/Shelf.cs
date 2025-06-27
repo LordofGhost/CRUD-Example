@@ -6,6 +6,7 @@ public class Shelf
 {
     [Key]
     public int ShelfId { get; set; }
-    required public Category Category { get; set; }
+    public required int Compartments { get; set; }
+    public required int CompartmentsSize { get; set; }
     public virtual ICollection<Product>? Products { get; set; }
 }
