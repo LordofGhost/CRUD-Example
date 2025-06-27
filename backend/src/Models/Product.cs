@@ -6,11 +6,15 @@ namespace Jupiter.Models;
 
 public enum Category
 {
-    Food,
-    Drinks,
-    HouseholdGoods,
-    Electronics,
-    Other
+    Laptop,
+    DesktopPc,
+    Tablets,
+    Monitors,
+    PrinterScanne,
+    MediaStorage,
+    Keyboards,
+    Mice,
+    Accessories
 }
 public class Product
 {
@@ -24,8 +28,6 @@ public class Product
     public int? ShelfId { get; set; }
     [DeleteBehavior(DeleteBehavior.SetNull)]
     public virtual Shelf? Shelf { get; set; }
-    required public int InStock { get; set; }
-    required public int Sold { get; set; }
     [Column(TypeName = "decimal(6, 2)")]
     required public decimal PurchasePrice { get; set; }
     [Column(TypeName = "decimal(6, 2)")]

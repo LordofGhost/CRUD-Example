@@ -45,7 +45,7 @@ public class ProductsController : ControllerBase
 
     // When creating a product the Shelf attribute should always be null, because otherwise a cycle is created and a 400 Error is sent
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Manager")]
     public async Task<ActionResult<Models.Product>> CreateProduct(Models.Product product)
     {
         // Check if Shelf exists
@@ -61,7 +61,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPatch("{ProductId}")]
-    [Authorize]
+    [Authorize(Roles = "Manager")]
     public async Task<ActionResult<Models.Product>> UpdateProduct(int ProductId, Models.Product product)
     {
         if (ProductId != product.ProductId)
