@@ -7,6 +7,7 @@ public class ShopDbContext : DbContext
 
     public DbSet<Models.Product> Products { get; set; }
     public DbSet<Models.Shelf> Shelves { get; set; }
+    public DbSet<Models.Stock> Stock { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
