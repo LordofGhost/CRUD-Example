@@ -79,7 +79,7 @@ export const editShelf = async (shelfId, category, products) => {
 export const deleteShelf = async (shelfId) => {
   try {
     const response = await fetch(`api/Shelves/${shelfId}`, {
-      method: "DELTE",
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },

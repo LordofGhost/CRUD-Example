@@ -109,7 +109,7 @@ export const editProduct = async (
 export const deleteProduct = async (productId) => {
   try {
     const response = await fetch(`api/Products/${productId}`, {
-      method: "DELTE",
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },

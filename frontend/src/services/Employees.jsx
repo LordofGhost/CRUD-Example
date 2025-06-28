@@ -54,7 +54,7 @@ export const editEmployee = async (email, firstName, lastName, role) => {
 export const deleteEmployee = async (email) => {
   try {
     const response = await fetch(`api/Employees/${email}`, {
-      method: "DELTE",
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
@@ -85,7 +85,7 @@ export const getMe = async () => {
   }
 };
 
-export const registerEmployee = async (firstName, lastName, password, role) => {
+export const registerEmployee = async (firstName, lastName, role, password) => {
   try {
     const response = await fetch("api/Employees/register", {
       method: "POST",
