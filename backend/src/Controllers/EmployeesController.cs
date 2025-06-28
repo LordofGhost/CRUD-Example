@@ -64,6 +64,9 @@ public class EmployeesController : ControllerBase
     {
         if (ModelState.IsValid)
         {
+            if (request.FirstName.Length < 2 || request.LastName.Length < 2) 
+                return BadRequest();
+
             var employee = new Models.Employee
             {
                 FirstName = request.FirstName,
@@ -73,10 +76,10 @@ public class EmployeesController : ControllerBase
             };
 
             var result = await _userManager.CreateAsync(employee, request.Password);
-            await _userManager.AddToRoleAsync(employee, request.Role);
-
+            
             if (result.Succeeded)
             {
+                await _userManager.AddToRoleAsync(employee, request.Role);
                 return Ok($"User {employee.FirstName} {employee.LastName} was successfully created!");
             }
 

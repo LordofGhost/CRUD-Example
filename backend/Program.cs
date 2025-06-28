@@ -31,6 +31,13 @@ builder.Services.AddIdentityApiEndpoints<Jupiter.Models.Employee>(options =>
 
     // @ sign is required because email and username are identical
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+
+    options.Password.RequiredLength = 6;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredUniqueChars = 3;
 })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<Jupiter.Data.Context.UserDbContext>();
@@ -57,7 +64,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 // CORS aktivieren
-app.UseCors("AllowReactApp");
+app.UseCors("AllowAll");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
