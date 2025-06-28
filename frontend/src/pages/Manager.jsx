@@ -3,8 +3,9 @@ import Header from "../components/layout/Header";
 import Employees from "../components/view/Employees";
 import Products from "../components/view/Products";
 import Shelves from "../components/view/Shelves";
+import Stock from "../components/view/Stock";
 
-function Administration() {
+function Manager() {
   const [view, setView] = useState("Angestellte");
 
   function handleViewChange(newView) {
@@ -17,6 +18,8 @@ function Administration() {
         return <Products />;
       case "Regale":
         return <Shelves />;
+      case "Lagerbestand":
+        return <Stock />;
       case "Angestellte":
         return <Employees />;
       default:
@@ -27,13 +30,13 @@ function Administration() {
   return (
     <>
       <Header
-        Views={["Produkte", "Regale", "Angestellte"]}
+        Views={["Produkte", "Regale", "Lagerbestand", "Angestellte"]}
         StartView={"Angestellte"}
         onActiveViewChange={handleViewChange}
       />
-      <div>{renderContent()}</div>
+      {renderContent()}
     </>
   );
 }
 
-export default Administration;
+export default Manager;

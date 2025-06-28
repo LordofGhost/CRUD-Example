@@ -35,7 +35,7 @@ function Login() {
   }
 
   return (
-    <div className="flex h-screen flex-col">
+    <>
       <Header
         Views={["Anmeldung"]}
         StartView={"Anmeldung"}
@@ -69,7 +69,7 @@ function Login() {
           </form>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

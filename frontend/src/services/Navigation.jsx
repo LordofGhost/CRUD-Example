@@ -10,13 +10,13 @@ export const navigateToPage = async (navigate) => {
 
   switch (me.role) {
     case "Manager":
-      navigate("/administration");
+      navigate("/manager");
       break;
     case "Cashier":
-      navigate("/CashRegister");
+      navigate("/cashier");
       break;
     case "ShelfFiller":
-      navigate("/Warehouse");
+      navigate("/shelffiller");
       break;
     default:
       navigate("/");
