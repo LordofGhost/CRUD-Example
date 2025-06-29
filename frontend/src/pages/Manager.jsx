@@ -6,7 +6,7 @@ import Shelves from "../components/view/Shelves";
 import Stock from "../components/view/Stock";
 
 function Manager() {
-  const [view, setView] = useState("Angestellte");
+  const [view, setView] = useState("Produkte");
 
   function handleViewChange(newView) {
     setView(newView);
@@ -31,7 +31,7 @@ function Manager() {
     <>
       <Header
         Views={["Produkte", "Regale", "Lagerbestand", "Angestellte"]}
-        StartView={"Angestellte"}
+        StartView={"Produkte"}
         onActiveViewChange={handleViewChange}
       />
       {renderContent()}
