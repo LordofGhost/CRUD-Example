@@ -3,11 +3,11 @@ function Dropdown({ value, options, onChange }) {
     <select
       value={value}
       onChange={onChange}
-      className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 "
+      className="w-full rounded-md border border-gray-300 p-3 focus:border-orange-300 focus:ring-2 focus:ring-orange-300 focus:outline-none"
     >
-      {options.map((role) => (
-        <option key={role} value={role}>
-          {role}
+      {options.map((option) => (
+        <option key={option} value={option}>
+          {option}
         </option>
       ))}
     </select>
