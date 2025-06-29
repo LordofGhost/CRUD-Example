@@ -48,7 +48,11 @@ public class ProductsController : ControllerBase
     [Authorize(Roles = "Manager")]
     public async Task<ActionResult<Models.Product>> CreateProduct(Models.Product product)
     {
-        // Check if Shelf exists
+        if (ProductExists(product.ProductId))
+        {
+            return BadRequest("A Product with the same id already exists");
+        }
+
         if (product.ShelfId != null && !_context.Shelves.Any(e => e.ShelfId == product.ShelfId))
         {
             return BadRequest("The selected shelf does not exist");
@@ -64,30 +68,17 @@ public class ProductsController : ControllerBase
     [Authorize(Roles = "Manager")]
     public async Task<ActionResult<Models.Product>> UpdateProduct(int ProductId, Models.Product product)
     {
-        if (ProductId != product.ProductId)
+        // Remove old Product
+        var oldProduct = await _context.Products.FindAsync(ProductId);
+        if (oldProduct == null)
         {
-            return BadRequest();
+            return NotFound();
         }
+        _context.Products.Remove(oldProduct);
+        await _context.SaveChangesAsync();
 
-        _context.Entry(product).State = EntityState.Modified;
-
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!ProductExists(product.ProductId))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
-
-        return CreatedAtAction(nameof(GetProduct), new { product.ProductId }, product);
+        // Create new Product
+        return await CreateProduct(product);
     }
 
     [HttpDelete("{ProductId}")]
@@ -95,13 +86,10 @@ public class ProductsController : ControllerBase
     public async Task<IActionResult> DeleteProduct(int ProductId)
     {
         var product = await _context.Products.FindAsync(ProductId);
-
-        // In case the product with the given ProductId doesn't exist
         if (product == null)
         {
             return NotFound();
         }
-
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();
 
