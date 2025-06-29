@@ -70,7 +70,9 @@ function EmployeeItem({ Employee, handleReload }) {
           isMenuOpen ? "rounded-b-none border-b border-gray-200" : ""
         }`}
       >
-        <div>{Employee.firstName + " " + Employee.lastName}</div>
+        <div className="font-semibold">
+          {Employee.firstName + " " + Employee.lastName}
+        </div>
         <div className="flex flex-row gap-5">
           <div
             className={`${getRoleBackgroundColor(

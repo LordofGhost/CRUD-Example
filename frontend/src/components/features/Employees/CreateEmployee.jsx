@@ -11,12 +11,13 @@ import PasswordInput from "../../common/PasswordInput";
 
 function CreateEmployee({ onClose, handleReload }) {
   const [creationError, setCreationError] = useState(false);
-  const [createData, setCreateData] = useState({
+  const createDataDefault = {
     firstName: "",
     lastName: "",
     role: "Manager",
     password: "",
-  });
+  };
+  const [createData, setCreateData] = useState(createDataDefault);
 
   function handleInputChange(field, value) {
     setCreateData((prev) => ({
