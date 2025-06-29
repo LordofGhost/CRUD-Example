@@ -53,7 +53,7 @@ function Header({ Views, StartView, onActiveViewChange }) {
         <div
           key={view}
           ref={(el) => (viewRefs.current[view] = el)}
-          className={`px-4 py-1 rounded-xl select-none cursor-pointer relative z-10 transition-colors duration-200 ${
+          className={`relative z-10 cursor-pointer rounded-xl px-4 py-1 transition-colors duration-200 select-none ${
             view === activeView
               ? "text-gray-700"
               : "text-gray-600 hover:text-gray-800"
@@ -71,7 +71,7 @@ function Header({ Views, StartView, onActiveViewChange }) {
 
       setViewComponents(processedViews);
     },
-    [onActiveViewChange, activeView, handleMouseEnter, handleMouseLeave]
+    [onActiveViewChange, activeView, handleMouseEnter, handleMouseLeave],
   );
 
   async function handleLogout() {
@@ -80,25 +80,28 @@ function Header({ Views, StartView, onActiveViewChange }) {
   }
 
   useEffect(() => {
-    // Set hove effect on page load
+    updateName();
+  }, [updateName]);
+
+  useEffect(() => {
+    // Set hover effect on page load
     if (activeView && viewRefs.current[activeView])
       handleMouseEnter(viewRefs.current[activeView]);
 
-    updateName();
     renderViews(Views);
-  }, [updateName, renderViews, Views, handleMouseEnter, activeView, StartView]);
+  }, [renderViews, Views, handleMouseEnter, activeView]);
 
   return (
-    <div className="flex flex-row shadow-lg justify-between">
-      <div className="flex flex-row min-w-60 m-2">
+    <div className="sticky top-0 z-50 flex w-full flex-row justify-between bg-white shadow-lg">
+      <div className="m-2 flex min-w-60 flex-row">
         <img className="h-12" src="jupiter.png" />
-        <h1 className="font-semibold text-xl bg-primary my-auto mx-3">
+        <h1 className="bg-primary mx-3 my-auto text-xl font-semibold">
           Jupiter
         </h1>
       </div>
-      <div className="flex flex-row bg-gray-200 inset-shadow-sm rounded-2xl m-auto px-1.5 py-1.5 relative">
+      <div className="relative m-auto flex flex-row rounded-2xl bg-gray-200 px-1.5 py-1.5 inset-shadow-sm">
         <div
-          className="absolute bg-gray-300 rounded-xl transition-all duration-300 ease-in-out"
+          className="absolute rounded-xl bg-gray-300 transition-all duration-300 ease-in-out"
           style={{
             left: `${hoverPosition.left}px`,
             width: `${hoverPosition.width}px`,
@@ -109,10 +112,10 @@ function Header({ Views, StartView, onActiveViewChange }) {
         />
         {viewComponents}
       </div>
-      <div className="flex flex-row min-w-60 m-2 my-auto justify-end">
-        <div className="font-semibold text-base mx-2">{employeeName}</div>
+      <div className="m-2 my-auto flex min-w-60 flex-row justify-end">
+        <div className="mx-2 text-base font-semibold">{employeeName}</div>
         <img
-          className="h-6 bg-red-300 hover:bg-red-400 p-1 rounded-md transition-all ease-in-out duration-300"
+          className="h-6 rounded-md bg-red-300 p-1 transition-all duration-300 ease-in-out hover:bg-red-400"
           src="logout.png"
           onClick={handleLogout}
         />
