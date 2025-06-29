@@ -36,7 +36,6 @@ export const createProduct = async (product) => {
         shelfId: null,
         purchasePrice: product.purchasePrice,
         sellingPrice: product.sellingPrice,
-        taxRate: product.taxRate,
       }),
     });
     return response.ok;
@@ -62,9 +61,9 @@ export const getProduct = async (productId) => {
   }
 };
 
-export const editProduct = async (product) => {
+export const editProduct = async (oldProductId, product) => {
   try {
-    const response = await fetch(`api/Products/${product.productId}`, {
+    const response = await fetch(`api/Products/${oldProductId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -78,7 +77,6 @@ export const editProduct = async (product) => {
         shelfId: product.shelfId,
         purchasePrice: product.purchasePrice,
         sellingPrice: product.sellingPrice,
-        taxRate: product.taxRate,
       }),
     });
     return response.ok;
