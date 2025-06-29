@@ -6,15 +6,16 @@ namespace Jupiter.Models;
 
 public enum Category
 {
-    Laptop,
-    DesktopPc,
+    Laptops,
+    PCs,
     Tablets,
-    Monitors,
-    PrinterScanne,
-    MediaStorage,
-    Keyboards,
-    Mice,
-    Accessories
+    Monitore,
+    Drucker,
+    Scanner,
+    Speichermedien,
+    Tastaturen,
+    Mäuse,
+    Zubehör
 }
 public class Product
 {
@@ -32,6 +33,4 @@ public class Product
     required public decimal PurchasePrice { get; set; }
     [Column(TypeName = "decimal(6, 2)")]
     required public decimal SellingPrice { get; set; }
-    [Column(TypeName = "decimal(6, 2)")]
-    required public decimal TaxRate { get; set; }
 }
