@@ -2,7 +2,7 @@ export const getProducts = async (category) => {
   try {
     let url = "api/Products";
 
-    if (category) {
+    if (category != null && category != "Alle") {
       url += `?category=${category}`;
     }
 
@@ -20,16 +20,7 @@ export const getProducts = async (category) => {
   }
 };
 
-export const createProduct = async (
-  productId,
-  name,
-  description,
-  category,
-  shelfId,
-  purchasePrice,
-  sellingPrice,
-  taxRate
-) => {
+export const createProduct = async (product) => {
   try {
     const response = await fetch("api/Products", {
       method: "POST",
@@ -37,15 +28,15 @@ export const createProduct = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        productId: productId,
-        name: name,
-        description: description,
+        productId: product.productId,
+        name: product.name,
+        description: product.description,
         image: "",
-        category: category,
-        shelfId: shelfId,
-        purchasePrice: purchasePrice,
-        sellingPrice: sellingPrice,
-        taxRate: taxRate,
+        category: product.category,
+        shelfId: null,
+        purchasePrice: product.purchasePrice,
+        sellingPrice: product.sellingPrice,
+        taxRate: product.taxRate,
       }),
     });
     return response.ok;
@@ -71,32 +62,23 @@ export const getProduct = async (productId) => {
   }
 };
 
-export const editProduct = async (
-  productId,
-  name,
-  description,
-  category,
-  shelfId,
-  purchasePrice,
-  sellingPrice,
-  taxRate
-) => {
+export const editProduct = async (product) => {
   try {
-    const response = await fetch(`api/Products/${productId}`, {
+    const response = await fetch(`api/Products/${product.productId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        productId: productId,
-        name: name,
-        description: description,
+        productId: product.productId,
+        name: product.name,
+        description: product.description,
         image: "",
-        category: category,
-        shelfId: shelfId,
-        purchasePrice: purchasePrice,
-        sellingPrice: sellingPrice,
-        taxRate: taxRate,
+        category: product.category,
+        shelfId: product.shelfId,
+        purchasePrice: product.purchasePrice,
+        sellingPrice: product.sellingPrice,
+        taxRate: product.taxRate,
       }),
     });
     return response.ok;
