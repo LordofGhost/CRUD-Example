@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Jupiter.Models;
 namespace Jupiter.Controllers;
 
 [ApiController]
@@ -16,7 +17,7 @@ public class ProductsController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<ActionResult<IEnumerable<Models.Product>>> GetProducts(
+    public async Task<ICollection<Models.ProductRequest>> GetProducts(
         [FromQuery] Models.Category? category = null
     )
     {
@@ -27,20 +28,61 @@ public class ProductsController : ControllerBase
             query = query.Where(p => p.Category == category);
         }
 
-        return await query.ToListAsync();
+        var products = await query.ToListAsync();
+        ICollection<Models.ProductRequest> productRequests = new List<Models.ProductRequest>();
+
+        foreach (var product in products)
+        {
+            var stock = await _context.Stock
+                .Where(s => s.ProductId == product.ProductId)
+                .OrderByDescending(s => s.Day)
+                .FirstOrDefaultAsync();
+            
+            if (stock == null)
+            {
+                stock = new Models.Stock
+                {
+                    ProductId = product.ProductId,
+                    InStock = 0,
+                    OnTheShelf = 0,
+                    PurchasedToday = 0,
+                    Day = DateTime.Today
+                };
+            }
+
+            productRequests.Add(new ProductRequest(product, stock));
+        }
+
+        return productRequests;
     }
 
     [HttpGet("{ProductId}")]
-    public async Task<ActionResult<Models.Product>> GetProduct(int ProductId)
+    public async Task<ActionResult<Models.ProductRequest>> GetProduct(int ProductId)
     {
         var product = await _context.Products.FindAsync(ProductId);
+        var stock = await _context.Stock
+            .Where(s => s.ProductId == ProductId)
+            .OrderByDescending(s => s.Day)
+            .FirstOrDefaultAsync();
 
         if (product == null)
         {
             return NotFound("This Product doens't exists!");
         }
+        
+        if (stock == null)
+        {
+            stock = new Models.Stock
+            {
+                ProductId = product.ProductId,
+                InStock = 0,
+                OnTheShelf = 0,
+                PurchasedToday = 0,
+                Day = DateTime.Today
+            };
+        }
 
-        return product;
+        return new Models.ProductRequest(product, stock);
     }
 
     // When creating a product the Shelf attribute should always be null, because otherwise a cycle is created and a 400 Error is sent
