@@ -1,5 +1,6 @@
 import { useState } from "react";
 import EditProduct from "./EditProduct";
+import BuyProduct from "./BuyProduct";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const categorys = [
@@ -15,12 +16,9 @@ export const categorys = [
   "Zubehör",
 ];
 
-function ProductItem({ Product, handleReload, onClick, editable }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  function openEditMenu() {
-    setIsMenuOpen(true);
-  }
+function ProductItem({ Product, handleReload, onClick, editable, showStock }) {
+  const [isEditMenuOpen, setIsEditMenuOpen] = useState(false);
+  const [isBuyMenuOpen, setIsBuyMenuOpen] = useState(false);
 
   function limitDescription(description, maxLength = 30) {
     if (!description) return "";
@@ -39,28 +37,57 @@ function ProductItem({ Product, handleReload, onClick, editable }) {
       </div>
       <div className="flex flex-row justify-between p-4">
         <div className="flex flex-col">
-          <div className="font-semibold">{Product.name}</div>
+          <div className="text-2xl font-medium">{Product.name}</div>
           <div>{limitDescription(Product.description)}</div>
-          <div>Regal: {Product.shelfId ?? "Nicht zugewiesen"}</div>
-          <div>Kategorie: {categorys[Product.category]}</div>
-          <div>Preis: {Product.sellingPrice}€</div>
+          <div>
+            {Product.shelfId ? `Regal ${Product.shelfId}` : "Kein Regal"}
+          </div>
+          <div>{Product.sellingPrice}€</div>
+          <div className="flex gap-2">
+            <div className="flex gap-1 rounded-md bg-indigo-400 px-1">
+              <div>Lager</div>
+              <div>{Product.inStock}</div>
+            </div>
+            <div className="flex gap-1 rounded-md bg-yellow-400 px-1">
+              <div>Regal</div>
+              <div>{Product.onTheShelf}</div>
+            </div>
+          </div>
         </div>
-        {editable && (
-          <>
-            <img
-              src="edit.png"
-              className="h-8 rounded-md p-1 hover:bg-gray-300"
-              onClick={openEditMenu}
-            />
-            {isMenuOpen && (
-              <EditProduct
-                Product={Product}
-                handleReload={handleReload}
-                onClose={() => setIsMenuOpen(false)}
+        <div className="flex flex-col justify-between">
+          {editable && (
+            <>
+              <img
+                src="edit.png"
+                className="h-8 rounded-md p-1 hover:bg-gray-300"
+                onClick={() => setIsEditMenuOpen(true)}
               />
-            )}
-          </>
-        )}
+              {isEditMenuOpen && (
+                <EditProduct
+                  Product={Product}
+                  handleReload={handleReload}
+                  onClose={() => setIsEditMenuOpen(false)}
+                />
+              )}
+            </>
+          )}
+          {showStock && (
+            <>
+              <img
+                src="buy.png"
+                className="h-8 rounded-md p-1 hover:bg-gray-300"
+                onClick={() => setIsBuyMenuOpen(true)}
+              />
+              {isBuyMenuOpen && (
+                <BuyProduct
+                  Product={Product}
+                  handleReload={handleReload}
+                  onClose={() => setIsBuyMenuOpen(false)}
+                />
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
