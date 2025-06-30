@@ -13,5 +13,5 @@ public class Stock
     public required int OnTheShelf { get; set; } = 0;
     public required int PurchasedToday { get; set; } = 0;
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public DateTime Day { get; set; } = DateTime.UtcNow;
+    public DateTime Day { get; set; } = DateTime.Today;
 }
