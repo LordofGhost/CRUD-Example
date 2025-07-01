@@ -16,14 +16,14 @@ public class ShelvesController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<ActionResult<IEnumerable<Models.Shelf>>> GetShelves(int ShelfId)
+    public async Task<ActionResult<IEnumerable<Models.Shelves.Shelf>>> GetShelves(int ShelfId)
     {
         return await _context.Shelves.ToListAsync();
     }
 
     [HttpGet("{ShelfId}")]
     [Authorize]
-    public async Task<ActionResult<Models.Shelf>> GetShelve(int ShelfId)
+    public async Task<ActionResult<Models.Shelves.Shelf>> GetShelve(int ShelfId)
     {
         var shelve = await _context.Shelves.FindAsync(ShelfId);
 
@@ -37,42 +37,52 @@ public class ShelvesController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Manager")]
-    public async Task<ActionResult<Models.Shelf>> CreateShelve(Models.Shelf shelf)
+    public async Task<ActionResult<Models.Shelves.Shelf>> CreateShelve(Models.Shelves.SCreate shelf)
     {
-        _context.Add(shelf);
+        _context.Add(new Models.Shelves.Shelf(shelf));
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetShelve), new { shelf.ShelfId }, shelf);
     }
 
-    [HttpPatch("{ShelfId}")]
+    [HttpPatch]
     [Authorize(Roles = "Manager")]
-    public async Task<ActionResult<Models.Shelf>> UpdateShelf(int ShelfId, Models.Shelf shelf)
+    public async Task<IActionResult> UpdateShelf(Models.Shelves.SUpdate updateShelfRequest)
     {
-        if (ShelfId != shelf.ShelfId)
+        var shelf = await _context.Shelves.FindAsync(updateShelfRequest.ShelfId);
+
+        if (shelf == null)
         {
-            return BadRequest();
+            return NotFound();
         }
+
+        var nonNullProductIds = updateShelfRequest.ProductIds.Where(id => id.HasValue);
+        if (nonNullProductIds.Count() != nonNullProductIds.Distinct().Count())
+        {
+            return BadRequest("Duplicate product IDs are not allowed in the same shelf.");
+        }
+
+        foreach (int? ProductId in updateShelfRequest.ProductIds)
+        {
+            if (ProductId != null)
+            {
+                if (await CheckForProductReference((int)ProductId, shelf.ShelfId))
+                {
+                    return BadRequest("Product reference allready exists!");
+                }
+            }
+        }
+
+        await RemoveShelfIdReferences(updateShelfRequest.ProductIds);
+
+        shelf.ProductIds = updateShelfRequest.ProductIds;
+
+        await AddShelfIdReferences(updateShelfRequest.ProductIds, shelf.ShelfId);
 
         _context.Entry(shelf).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
 
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!ShelfExists(shelf.ShelfId))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
-
-        return CreatedAtAction(nameof(GetShelve), new { shelf.ShelfId }, shelf);
+        return Ok();
     }
 
     [HttpDelete("{ShelfId}")]
@@ -86,6 +96,8 @@ public class ShelvesController : ControllerBase
             return NotFound();
         }
 
+        await RemoveShelfIdReferences(shelf.ProductIds);
+
         _context.Shelves.Remove(shelf);
         await _context.SaveChangesAsync();
 
@@ -96,5 +108,56 @@ public class ShelvesController : ControllerBase
     {
         return _context.Shelves.Any(e => e.ShelfId == ShelfId);
     }
-    public int test;
+
+    private async Task<bool> RemoveShelfIdReferences(int?[] ProductIds)
+    {
+        foreach (int? ProductId in ProductIds)
+        {
+            if (ProductId != null)
+            {
+                var product = await _context.Products.FindAsync(ProductId);
+                if (product != null)
+                {
+                    product.ShelfId = null;
+                    _context.Entry(product).State = EntityState.Modified;
+                }
+            }
+        }
+        return true;
+    }
+
+    private async Task<bool> AddShelfIdReferences(int?[] ProductIds, int ShelfId)
+    {
+        foreach (int? ProductId in ProductIds)
+        {
+            if (ProductId != null)
+            {
+                var product = await _context.Products.FindAsync(ProductId);
+                if (product != null)
+                {
+                    product.ShelfId = ShelfId;
+                    _context.Entry(product).State = EntityState.Modified;
+                }
+            }
+        }
+        return true;
+    }
+
+    private async Task<bool> CheckForProductReference(int checkProductId, int ShelfId)
+    {
+        var shelves = await _context.Shelves.ToListAsync();
+        foreach (var shelf in shelves)
+        {
+            // Skip current Shelf
+            if (shelf.ShelfId == ShelfId) continue;
+            foreach (int? ProductId in shelf.ProductIds)
+            {
+                if (ProductId != null)
+                {
+                    if ((int)ProductId == checkProductId) return true;
+                }
+            }
+        }
+        return false;
+    }
 }
