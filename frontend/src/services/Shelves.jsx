@@ -1,18 +1,11 @@
-export const getShelves = async (category) => {
+export const getShelves = async () => {
   try {
-    let url = "api/Shelves";
-
-    if (category) {
-      url += `?category=${category}`;
-    }
-
-    const response = await fetch(url, {
+    const response = await fetch("api/Shelves", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
-
     return await response.json();
   } catch (error) {
     console.error("Could not get Shelves: " + error);
@@ -20,17 +13,16 @@ export const getShelves = async (category) => {
   }
 };
 
-export const createShelf = async (shelfId, category, products) => {
+export const createShelf = async (shelf) => {
   try {
-    const response = await fetch("api/Products", {
+    const response = await fetch("api/Shelves", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        shelfId: shelfId,
-        category: category,
-        products: products,
+        compartments: shelf.compartments,
+        compartmentsSize: shelf.compartmentsSize,
       }),
     });
     return response.ok;
@@ -56,19 +48,23 @@ export const getShelf = async (shelfId) => {
   }
 };
 
-export const editShelf = async (shelfId, category, products) => {
+export const setCompartments = async (shelfId, ProductIds) => {
+  let convertedProductIds = ProductIds.map((productId) => {
+    if (productId === "") return null;
+    else return productId;
+  });
   try {
-    const response = await fetch(`api/Shelves/${shelfId}`, {
+    const response = await fetch(`api/Shelves`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         shelfId: shelfId,
-        category: category,
-        products: products,
+        ProductIds: convertedProductIds,
       }),
     });
+    console.log(response.ok);
     return response.ok;
   } catch (error) {
     console.error("Shelf could not be edited: " + error);
