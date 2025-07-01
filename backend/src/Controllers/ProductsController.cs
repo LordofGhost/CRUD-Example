@@ -117,7 +117,11 @@ public class ProductsController : ControllerBase
             return NotFound();
         }
         // Delete Shelf reference if ProductId changes
-        if (ProductId != product.ProductId) await DeleteReferencesInShelves(ProductId);
+        if (ProductId != product.ProductId)
+        {
+            await DeleteReferencesInShelves(ProductId);
+            await UpdateReferencesInStock(ProductId, product.ProductId);
+        } 
         _context.Products.Remove(oldProduct);
         await _context.SaveChangesAsync();
 
@@ -135,6 +139,7 @@ public class ProductsController : ControllerBase
             return NotFound();
         }
 
+        await DeleteReferencesInStock(ProductId);
         await DeleteReferencesInShelves(ProductId);
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();
@@ -156,13 +161,41 @@ public class ProductsController : ControllerBase
             {
                 if (shelf.ProductIds[index] != null)
                 {
-                    if (shelf.ProductIds[index] == deleteProductId) {
+                    if (shelf.ProductIds[index] == deleteProductId)
+                    {
                         shelf.ProductIds[index] = null;
                         _context.Entry(shelf).State = EntityState.Modified;
                     }
                 }
             }
         }
+        return true;
+    }
+
+    private async Task<bool> DeleteReferencesInStock(int deleteProductId)
+    {
+        var stocks = await _context.Stock.ToListAsync();
+        foreach (var stock in stocks)
+        {
+            if (stock.ProductId == deleteProductId)
+            {
+                _context.Stock.Remove(stock);
+            }
+        }
+        return true;
+    }
+
+    private async Task<bool> UpdateReferencesInStock(int oldProductId, int newProductId)
+    {
+        var stocks = await _context.Stock.ToListAsync();
+        foreach (var stock in stocks)
+        {
+            if (stock.ProductId == oldProductId)
+            {
+                stock.ProductId = newProductId;
+            }
+        }
+        await _context.SaveChangesAsync();
         return true;
     }
 }
