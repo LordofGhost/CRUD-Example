@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-namespace Jupiter.Models;
+namespace Jupiter.Models.Employees;
 
 public class Employee : IdentityUser
 {

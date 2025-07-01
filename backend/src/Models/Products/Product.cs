@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Jupiter.Models;
+namespace Jupiter.Models.Products;
 
 public enum Category
 {
@@ -25,10 +25,7 @@ public class Product
     public string? Description { get; set; }
     public string? Image { get; set; }
     required public Category Category { get; set; }
-    [ForeignKey(nameof(Shelf))]
     public int? ShelfId { get; set; }
-    [DeleteBehavior(DeleteBehavior.SetNull)]
-    public virtual Shelf? Shelf { get; set; }
     [Column(TypeName = "decimal(6, 2)")]
     required public decimal PurchasePrice { get; set; }
     [Column(TypeName = "decimal(6, 2)")]

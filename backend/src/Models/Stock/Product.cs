@@ -1,7 +1,6 @@
-namespace Jupiter.Models;
+namespace Jupiter.Models.Stock;
 
-public class ProductStock
-{
+public class SProduct {
     public required int ProductId { get; set; }
     public required int Amount { get; set; }
 }

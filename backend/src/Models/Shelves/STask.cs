@@ -1,6 +1,6 @@
-namespace Jupiter.Models;
+namespace Jupiter.Models.Shelves;
 
-public class ShelfFillerTask
+public class STask
 {
     public required int ProductId { get; set; }
     public required string ProductName { get; set; }

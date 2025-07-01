@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JupiterApi.src.Migrations.Shop
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20250624094928_InitialCreate")]
+    [Migration("20250701115415_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace JupiterApi.src.Migrations.Shop
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
 
-            modelBuilder.Entity("Jupiter.Models.Product", b =>
+            modelBuilder.Entity("Jupiter.Models.Products.Product", b =>
                 {
                     b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
@@ -35,9 +35,6 @@ namespace JupiterApi.src.Migrations.Shop
                     b.Property<string>("Image")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("InStock")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -51,46 +48,70 @@ namespace JupiterApi.src.Migrations.Shop
                     b.Property<int?>("ShelfId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Sold")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("TaxRate")
-                        .HasColumnType("decimal(6, 2)");
-
                     b.HasKey("ProductId");
-
-                    b.HasIndex("ShelfId");
 
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Jupiter.Models.Shelf", b =>
+            modelBuilder.Entity("Jupiter.Models.Shelves.Shelf", b =>
                 {
                     b.Property<int>("ShelfId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Category")
+                    b.Property<int>("Compartments")
                         .HasColumnType("INTEGER");
+
+                    b.Property<int>("CompartmentsSize")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ProductIds")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ShelfId");
 
                     b.ToTable("Shelves");
                 });
 
-            modelBuilder.Entity("Jupiter.Models.Product", b =>
+            modelBuilder.Entity("Jupiter.Models.Stock.Stock", b =>
                 {
-                    b.HasOne("Jupiter.Models.Shelf", "Shelf")
-                        .WithMany("Products")
-                        .HasForeignKey("ShelfId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                    b.Property<int>("StockId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Navigation("Shelf");
+                    b.Property<DateTime>("Day")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("InStock")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("OnTheShelf")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PurchasedToday")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("StockId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Stock");
                 });
 
-            modelBuilder.Entity("Jupiter.Models.Shelf", b =>
+            modelBuilder.Entity("Jupiter.Models.Stock.Stock", b =>
                 {
-                    b.Navigation("Products");
+                    b.HasOne("Jupiter.Models.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 #pragma warning restore 612, 618
         }

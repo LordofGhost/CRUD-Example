@@ -4,10 +4,10 @@ namespace Jupiter.Data.Seeders;
 
 public class AdminSeeder
 {
-    public static async Task SeedAdmin(UserManager<Models.Employee> userManager)
+    public static async Task SeedAdmin(UserManager<Models.Employees.Employee> userManager)
     {
         // Admin-User erstellen
-        var adminUser = new Models.Employee
+        var adminUser = new Models.Employees.Employee
         {
             Email = "admin@jupiter.com",
             UserName = "admin@jupiter.com",

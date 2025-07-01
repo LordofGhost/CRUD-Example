@@ -1,6 +1,6 @@
-namespace Jupiter.Models;
+namespace Jupiter.Models.Employees;
 
-public class LoginRequest
+public class Login
 {
     public required string Email { get; set; }
     public required string Password { get; set; }
