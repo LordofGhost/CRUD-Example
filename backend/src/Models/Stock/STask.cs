@@ -1,4 +1,4 @@
-namespace Jupiter.Models.Shelves;
+namespace Jupiter.Models.Stock;
 
 public class STask
 {
