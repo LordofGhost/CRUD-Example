@@ -9,10 +9,10 @@ namespace Jupiter.Controllers;
 [Route("api/[controller]")]
 public class EmployeesController : ControllerBase
 {
-    private readonly UserManager<Models.Employee> _userManager;
-    private readonly SignInManager<Models.Employee> _signInManager;
+    private readonly UserManager<Models.Employees.Employee> _userManager;
+    private readonly SignInManager<Models.Employees.Employee> _signInManager;
 
-    public EmployeesController(UserManager<Models.Employee> userManager, SignInManager<Models.Employee> signInManager)
+    public EmployeesController(UserManager<Models.Employees.Employee> userManager, SignInManager<Models.Employees.Employee> signInManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -20,7 +20,7 @@ public class EmployeesController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "Manager")]
-    public async Task<ActionResult<IEnumerable<Models.EmployeeRequest>>> GetEmployees()
+    public async Task<ActionResult<IEnumerable<Models.Employees.ERequest>>> GetEmployees()
     {
         var users = await _userManager.Users.ToListAsync();
         var usersWithRoles = new List<object>();
@@ -35,7 +35,7 @@ public class EmployeesController : ControllerBase
 
     [HttpGet("{employeeEMail}")]
     [Authorize(Roles = "Manager")]
-    public async Task<ActionResult<Models.EmployeeRequest>> GetEmployee(string employeeEMail)
+    public async Task<ActionResult<Models.Employees.ERequest>> GetEmployee(string employeeEMail)
     {
         var user = await _userManager.FindByEmailAsync(employeeEMail.ToUpper());
 
@@ -46,7 +46,7 @@ public class EmployeesController : ControllerBase
 
     [HttpGet("me")]
     [Authorize]
-    public async Task<ActionResult<Models.EmployeeRequest>> GetMe()
+    public async Task<ActionResult<Models.Employees.ERequest>> GetMe()
     {
         var userEmail = User.Identity?.Name;
         if (string.IsNullOrEmpty(userEmail)) return Unauthorized();
@@ -60,14 +60,14 @@ public class EmployeesController : ControllerBase
 
     [HttpPost("register")]
     [Authorize(Roles = "Manager")]
-    public async Task<IActionResult> Register(Models.RegisterRequest request)
+    public async Task<IActionResult> Register(Models.Employees.Register request)
     {
         if (ModelState.IsValid)
         {
             if (request.FirstName.Length < 2 || request.LastName.Length < 2) 
                 return BadRequest();
 
-            var employee = new Models.Employee
+            var employee = new Models.Employees.Employee
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
@@ -94,7 +94,7 @@ public class EmployeesController : ControllerBase
 
     [HttpPost("login")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login(Models.LoginRequest request)
+    public async Task<IActionResult> Login(Models.Employees.Login request)
     {
         if (request.Email == null || request.Password == null) return Unauthorized("Invalid login attempt.");
 
@@ -115,7 +115,7 @@ public class EmployeesController : ControllerBase
 
     [HttpPatch("{employeeEMail}")]
     [Authorize(Roles = "Manager")]
-    public async Task<ActionResult<Models.EmployeeRequest>> UpdateEmployee(string employeeEMail, Models.EmployeeRequest request)
+    public async Task<ActionResult<Models.Employees.ERequest>> UpdateEmployee(string employeeEMail, Models.Employees.ERequest request)
     {
         var employee = await _userManager.FindByEmailAsync(employeeEMail);
         if (employee == null) return NotFound();
@@ -151,12 +151,12 @@ public class EmployeesController : ControllerBase
         return NoContent();
     }
 
-    private async Task<Models.EmployeeRequest> createUserWithRoles(Models.Employee user)
+    private async Task<Models.Employees.ERequest> createUserWithRoles(Models.Employees.Employee user)
     {
         var roles = await _userManager.GetRolesAsync(user);
         string? role = roles.ElementAtOrDefault(0);
 
-        return new Models.EmployeeRequest
+        return new Models.Employees.ERequest
         {
             FirstName = user.FirstName ?? " ",
             LastName = user.LastName ?? " ",
