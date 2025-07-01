@@ -64,7 +64,6 @@ export const setCompartments = async (shelfId, ProductIds) => {
         ProductIds: convertedProductIds,
       }),
     });
-    console.log(response.ok);
     return response.ok;
   } catch (error) {
     console.error("Shelf could not be edited: " + error);
