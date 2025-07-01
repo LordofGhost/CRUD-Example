@@ -34,11 +34,11 @@ public class StockController : ControllerBase
 
     [HttpPatch("SellProducts")]
     [Authorize]
-    public async Task<IActionResult> SellProducts(Models.ProductStock[] soldProducts)
+    public async Task<IActionResult> SellProducts(Models.Stock.SProduct[] soldProducts)
     {
         foreach (var soldProduct in soldProducts)
         {
-            Models.Stock stock = await GetOrCreateTodayEntry(soldProduct.ProductId);
+            Models.Stock.Stock stock = await GetOrCreateTodayEntry(soldProduct.ProductId);
 
             if (stock.OnTheShelf < soldProduct.Amount)
             {
@@ -56,9 +56,9 @@ public class StockController : ControllerBase
 
     [HttpPatch("RestockProduct")]
     [Authorize]
-    public async Task<IActionResult> RestockProduct(Models.ProductStock productStock)
+    public async Task<IActionResult> RestockProduct(Models.Stock.SProduct productStock)
     {
-        Models.Stock stock = await GetOrCreateTodayEntry(productStock.ProductId);
+        Models.Stock.Stock stock = await GetOrCreateTodayEntry(productStock.ProductId);
 
         stock.InStock += productStock.Amount;
 
@@ -72,7 +72,7 @@ public class StockController : ControllerBase
         return _context.Stock.Any(e => e.ProductId == ProductId && e.Day == DateTime.Today);
     }
 
-    private async Task<Models.Stock?> GetLatestEntry(int ProductId)
+    private async Task<Models.Stock.Stock?> GetLatestEntry(int ProductId)
     {
         return await _context.Stock
             .Where(s => s.ProductId == ProductId)
@@ -80,10 +80,10 @@ public class StockController : ControllerBase
             .FirstOrDefaultAsync();
     }
 
-    private async Task<Models.Stock> CreateTodaysEntry(int ProductId)
+    private async Task<Models.Stock.Stock> CreateTodaysEntry(int ProductId)
     {
-        Models.Stock? oldEntry = await GetLatestEntry(ProductId);
-        return new Models.Stock
+        Models.Stock.Stock? oldEntry = await GetLatestEntry(ProductId);
+        return new Models.Stock.Stock
         {
             ProductId = ProductId,
             InStock = oldEntry != null ? oldEntry.InStock : 0,
@@ -93,7 +93,7 @@ public class StockController : ControllerBase
         };
     }
 
-    private async Task<Models.Stock> GetOrCreateTodayEntry(int ProductId)
+    private async Task<Models.Stock.Stock> GetOrCreateTodayEntry(int ProductId)
     {
             if (!TodaysEntryExists(ProductId))
             {
