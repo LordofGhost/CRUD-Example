@@ -1,4 +1,9 @@
-# CRUD Example
+# Jupiter
+
+This project is a small ERP system for a supermarket or other retail business.
+The main function is a user administration with 3 different roles (cashier, shelfFiller, manager), each role represents a different profession. By logging in, each user is redirected to their corresponding view and can work there at a cashier, in the warehouse or as a manager.
+It was created as part of an exercise project where the focus was on learning and first contact with dotnet and React.
+The name `Jupiter` has its origins in a play on words based on the electronics store `Saturn`.
 
 ## Setup
 
@@ -9,24 +14,33 @@
 5. Create SQLite database with `dotnet ef database update --context ShopDbContext` inside the `backend` folder
 6. Start the backend by running `dotnet run` inside the `backend` folder
 
-## Commands
+### Commands
 
 - Create database migrations for UserDb `dotnet ef migrations add InitialCreate --context UserDbContext -o src/Migrations/User`
 - Update database migrations for UserDb `dotnet ef database update --context UserDbContext`
 - Create database migrations for ShopDb `dotnet ef migrations add InitialCreate --context ShopDbContext -o src/Migrations/Shop`
 - Update database migrations for ShopDb `dotnet ef database update --context ShopDbContext`
 
-## Debugging
+### Debugging
 
 The Api can be tested with `Swagger` at this localhost address `http://localhost:5093/swagger`.
 
 ## Roadmap
 
-- [ ] Product categories and multiple types of products
 - [x] GUI Navbar
-- [ ] Imporve edit / create product pages
-- [x] Use SQL Lite DB
-- [ ] Seperate Employees DB
+- [x] Product categories and multiple types of products
+- [x] Imporve edit / create product pages
+- [x] Use SQLite DB for Shop
+- [x] Seperate Employees DB
+- [x] Integrate dotnet identity in the project
+- [x] Shelf view (create, update, delete)
+- [ ] CashRegister view (sell products)
+- [ ] Analyse view
+- [ ] Custom Product images
+
+## Bugs
+
+- Action Buttons not working on Shelf View on the bottom of the list
 
 ## Questions
 
@@ -35,4 +49,4 @@ The Api can be tested with `Swagger` at this localhost address `http://localhost
 
 ## Credits
 
-This Project is a modify version of the one shown in this [Post](https://medium.com/@hassanjabbar2017/performing-crud-operations-using-react-with-net-core-a-step-by-step-guide-0176efa86934).
+This Project was originaly based on this Blog [Post](https://medium.com/@hassanjabbar2017/performing-crud-operations-using-react-with-net-core-a-step-by-step-guide-0176efa86934), but now it corresponds to less than 10% of the codebase.
