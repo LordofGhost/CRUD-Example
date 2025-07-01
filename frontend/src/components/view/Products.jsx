@@ -35,6 +35,7 @@ function Products() {
           <InputTitle Title={"Kategorie"} />
           <Dropdown
             options={categorys}
+            placeholder={"Kategorie wählen"}
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
           />

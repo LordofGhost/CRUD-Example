@@ -16,6 +16,7 @@ function ProductList({ handleReload, categoryFilter }) {
           Product={product}
           key={`product-${index}`}
           editable={true}
+          showStock={true}
           handleReload={handleReload}
         />
       ));
