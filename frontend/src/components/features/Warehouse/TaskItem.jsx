@@ -1,8 +1,9 @@
+import { taskComplete } from "../../../services/Stock";
 import Button from "../../common/Button";
 
 function TaskItem({ Task, handleReload }) {
-  function handleComplete() {
-    // TODO
+  async function handleComplete() {
+    await taskComplete(Task.productId, Task.amount);
     handleReload();
   }
 
