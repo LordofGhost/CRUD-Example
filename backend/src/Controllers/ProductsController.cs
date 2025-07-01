@@ -17,11 +17,11 @@ public class ProductsController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<ICollection<Models.ProductRequest>> GetProducts(
-        [FromQuery] Models.Category? category = null
+    public async Task<ICollection<Models.Products.PRequest>> GetProducts(
+        [FromQuery] Models.Products.Category? category = null
     )
     {
-        IQueryable<Models.Product> query = _context.Products;
+        IQueryable<Models.Products.Product> query = _context.Products;
 
         if (category != null)
         {
@@ -29,7 +29,7 @@ public class ProductsController : ControllerBase
         }
 
         var products = await query.ToListAsync();
-        ICollection<Models.ProductRequest> productRequests = new List<Models.ProductRequest>();
+        ICollection<Models.Products.PRequest> productRequests = new List<Models.Products.PRequest>();
 
         foreach (var product in products)
         {
@@ -37,10 +37,10 @@ public class ProductsController : ControllerBase
                 .Where(s => s.ProductId == product.ProductId)
                 .OrderByDescending(s => s.Day)
                 .FirstOrDefaultAsync();
-            
+
             if (stock == null)
             {
-                stock = new Models.Stock
+                stock = new Models.Stock.Stock
                 {
                     ProductId = product.ProductId,
                     InStock = 0,
@@ -50,14 +50,14 @@ public class ProductsController : ControllerBase
                 };
             }
 
-            productRequests.Add(new ProductRequest(product, stock));
+            productRequests.Add(new Models.Products.PRequest(product, stock));
         }
 
         return productRequests;
     }
 
     [HttpGet("{ProductId}")]
-    public async Task<ActionResult<Models.ProductRequest>> GetProduct(int ProductId)
+    public async Task<ActionResult<Models.Products.PRequest>> GetProduct(int ProductId)
     {
         var product = await _context.Products.FindAsync(ProductId);
         var stock = await _context.Stock
@@ -69,10 +69,10 @@ public class ProductsController : ControllerBase
         {
             return NotFound("This Product doens't exists!");
         }
-        
+
         if (stock == null)
         {
-            stock = new Models.Stock
+            stock = new Models.Stock.Stock
             {
                 ProductId = product.ProductId,
                 InStock = 0,
@@ -82,13 +82,13 @@ public class ProductsController : ControllerBase
             };
         }
 
-        return new Models.ProductRequest(product, stock);
+        return new Models.Products.PRequest(product, stock);
     }
 
     // When creating a product the Shelf attribute should always be null, because otherwise a cycle is created and a 400 Error is sent
     [HttpPost]
     [Authorize(Roles = "Manager")]
-    public async Task<ActionResult<Models.Product>> CreateProduct(Models.Product product)
+    public async Task<ActionResult<Models.Products.Product>> CreateProduct(Models.Products.Product product)
     {
         if (ProductExists(product.ProductId))
         {
@@ -108,7 +108,7 @@ public class ProductsController : ControllerBase
 
     [HttpPatch("{ProductId}")]
     [Authorize(Roles = "Manager")]
-    public async Task<ActionResult<Models.Product>> UpdateProduct(int ProductId, Models.Product product)
+    public async Task<ActionResult<Models.Products.Product>> UpdateProduct(int ProductId, Models.Products.Product product)
     {
         // Remove old Product
         var oldProduct = await _context.Products.FindAsync(ProductId);
@@ -116,6 +116,8 @@ public class ProductsController : ControllerBase
         {
             return NotFound();
         }
+        // Delete Shelf reference if ProductId changes
+        if (ProductId != product.ProductId) await DeleteReferencesInShelves(ProductId);
         _context.Products.Remove(oldProduct);
         await _context.SaveChangesAsync();
 
@@ -132,6 +134,8 @@ public class ProductsController : ControllerBase
         {
             return NotFound();
         }
+
+        await DeleteReferencesInShelves(ProductId);
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();
 
@@ -143,4 +147,22 @@ public class ProductsController : ControllerBase
         return _context.Products.Any(e => e.ProductId == ProductId);
     }
 
+    private async Task<bool> DeleteReferencesInShelves(int deleteProductId)
+    {
+        var shelves = await _context.Shelves.ToListAsync();
+        foreach (var shelf in shelves)
+        {
+            for (int index = 0; index < shelf.ProductIds.Length; index++)
+            {
+                if (shelf.ProductIds[index] != null)
+                {
+                    if (shelf.ProductIds[index] == deleteProductId) {
+                        shelf.ProductIds[index] = null;
+                        _context.Entry(shelf).State = EntityState.Modified;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 }
