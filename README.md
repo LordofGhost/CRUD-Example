@@ -40,7 +40,6 @@ The Api can be tested with `Swagger` at this localhost address `http://localhost
 
 ## Bugs
 
-- Action Buttons not working on Shelf View on the bottom of the list
 
 ## Questions
 

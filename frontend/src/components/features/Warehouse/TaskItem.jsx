@@ -11,7 +11,7 @@ function TaskItem({ Task, handleReload }) {
     <div className="flex w-full flex-row justify-between rounded-md p-3 shadow-lg">
       <div className="flex items-center gap-5">
         <div className="font-semibold">{Task.productName}</div>
-        <div className="rounded-md bg-purple-300 px-1">{Task.productId}</div>
+        <div className="rounded-md bg-orange-300 px-1">{Task.productId}</div>
         <img src="close.png" className="h-8 p-2" />
         <div className="text-xl font-semibold">{Task.amount}</div>
       </div>
