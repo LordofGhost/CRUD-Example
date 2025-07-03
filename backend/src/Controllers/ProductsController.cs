@@ -110,23 +110,43 @@ public class ProductsController : ControllerBase
     [Authorize(Roles = "Manager")]
     public async Task<ActionResult<Models.Products.Product>> UpdateProduct(ulong ProductId, Models.Products.Product product)
     {
-        // Remove old Product
-        var oldProduct = await _context.Products.FindAsync(ProductId);
-        if (oldProduct == null)
+        if (ProductId != product.ProductId)
+        {
+            var oldProduct = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ProductId == ProductId);
+            if (oldProduct == null)
+            {
+                return NotFound();
+            }
+
+            var createResult = await CreateProduct(product);
+            if (createResult.Result is not CreatedAtActionResult)
+            {
+                return createResult;
+            }
+
+            await UpdateReferencesInShelves(ProductId, product.ProductId);
+            await UpdateReferencesInStock(ProductId, product.ProductId);
+
+            var productToRemove = await _context.Products.FindAsync(ProductId);
+            if (productToRemove != null)
+            {
+                _context.Products.Remove(productToRemove);
+                await _context.SaveChangesAsync();
+            }
+
+            return createResult;
+        }
+
+        var existingProduct = await _context.Products.FindAsync(ProductId);
+        if (existingProduct == null)
         {
             return NotFound();
         }
-        // Delete Shelf reference if ProductId changes
-        if (ProductId != product.ProductId)
-        {
-            await UpdateReferencesInShelves(ProductId, product.ProductId);
-            await UpdateReferencesInStock(ProductId, product.ProductId);
-        } 
-        _context.Products.Remove(oldProduct);
+
+        _context.Entry(existingProduct).CurrentValues.SetValues(product);
         await _context.SaveChangesAsync();
 
-        // Create new Product
-        return await CreateProduct(product);
+        return NoContent();
     }
 
     [HttpDelete("{ProductId}")]
@@ -213,9 +233,9 @@ public class ProductsController : ControllerBase
             if (stock.ProductId == oldProductId)
             {
                 stock.ProductId = newProductId;
+                _context.Entry(stock).State = EntityState.Modified;
             }
         }
-        await _context.SaveChangesAsync();
         return true;
     }
 }
