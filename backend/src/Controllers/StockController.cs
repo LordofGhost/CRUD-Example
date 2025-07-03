@@ -72,6 +72,11 @@ public class StockController : ControllerBase
     [Authorize]
     public async Task<IActionResult> SellProducts(Models.Stock.SProduct[] soldProducts)
     {
+        if (soldProducts == null || soldProducts.Length == 0)
+        {
+            return BadRequest("No products selected.");
+        }
+         
         foreach (var soldProduct in soldProducts)
         {
             Models.Stock.Stock stock = await GetOrCreateTodayEntry(soldProduct.ProductId);
@@ -103,12 +108,12 @@ public class StockController : ControllerBase
         return NoContent();
     }
 
-    private bool TodaysEntryExists(int ProductId)
+    private bool TodaysEntryExists(ulong ProductId)
     {
         return _context.Stock.Any(e => e.ProductId == ProductId && e.Day == DateTime.Today);
     }
 
-    private async Task<Models.Stock.Stock?> GetLatestEntry(int ProductId)
+    private async Task<Models.Stock.Stock?> GetLatestEntry(ulong ProductId)
     {
         return await _context.Stock
             .Where(s => s.ProductId == ProductId)
@@ -116,7 +121,7 @@ public class StockController : ControllerBase
             .FirstOrDefaultAsync();
     }
 
-    private async Task<Models.Stock.Stock> CreateTodaysEntry(int ProductId)
+    private async Task<Models.Stock.Stock> CreateTodaysEntry(ulong ProductId)
     {
         var product = await _context.Products.FindAsync(ProductId);
         if (product == null)
@@ -134,7 +139,7 @@ public class StockController : ControllerBase
         };
     }
 
-    private async Task<Models.Stock.Stock> GetOrCreateTodayEntry(int ProductId)
+    private async Task<Models.Stock.Stock> GetOrCreateTodayEntry(ulong ProductId)
     {
         if (!TodaysEntryExists(ProductId))
         {
@@ -149,7 +154,7 @@ public class StockController : ControllerBase
         }
     }
 
-    private async Task<int> GetCompartmentsSizeOfProduct(int ProductId)
+    private async Task<int> GetCompartmentsSizeOfProduct(ulong ProductId)
     {
         var product = await _context.Products.FindAsync(ProductId);
 
@@ -162,7 +167,7 @@ public class StockController : ControllerBase
         return shelf.CompartmentsSize;
     }
 
-    private async Task<bool> NewerStockExists(int ProductId, DateTime Day)
+    private async Task<bool> NewerStockExists(ulong ProductId, DateTime Day)
     {
         var stocks = await _context.Stock.ToListAsync();
 
