@@ -20,7 +20,7 @@ public enum Category
 public class Product
 {
     [Key]
-    public int ProductId { get; set; }
+    public ulong ProductId { get; set; }
     required public string Name { get; set; }
     public string? Description { get; set; }
     public string? Image { get; set; }

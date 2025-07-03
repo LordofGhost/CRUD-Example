@@ -9,7 +9,7 @@ public class Shelf
     public int ShelfId { get; set; }
     public required int Compartments { get; set; }
     public required int CompartmentsSize { get; set; }
-    public required int?[] ProductIds { get; set; }
+    public required ulong?[] ProductIds { get; set; }
 
     public Shelf() { }
 
@@ -19,6 +19,6 @@ public class Shelf
         ShelfId = shelf.ShelfId;
         Compartments = shelf.Compartments;
         CompartmentsSize = shelf.CompartmentsSize;
-        ProductIds = new int?[Compartments];
+        ProductIds = new ulong?[Compartments];
     }
 }
