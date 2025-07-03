@@ -53,6 +53,14 @@ function CreateEmployee({ onClose, handleReload }) {
       )}
       <div className="flex flex-col gap-4">
         <div>
+          <InputTitle Title={"Role"} />
+          <Dropdown
+            value={createData.role}
+            onChange={(e) => handleInputChange("role", e.target.value)}
+            options={roles}
+          />
+        </div>
+        <div>
           <InputTitle Title={"Vorname"} />
           <TextInput
             value={createData.firstName}
@@ -73,14 +81,6 @@ function CreateEmployee({ onClose, handleReload }) {
           <PasswordInput
             value={createData.password}
             onChange={(e) => handleInputChange("password", e.target.value)}
-          />
-        </div>
-        <div>
-          <InputTitle Title={"Role"} />
-          <Dropdown
-            value={createData.role}
-            onChange={(e) => handleInputChange("role", e.target.value)}
-            options={roles}
           />
         </div>
         <div className="flex flex-row gap-2">
