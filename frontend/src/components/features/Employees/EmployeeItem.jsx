@@ -64,92 +64,92 @@ function EmployeeItem({ Employee, handleReload }) {
   }
 
   return (
-  <div className="w-full rounded-md shadow-lg transition-all duration-300">
-    <div
-      className={`flex w-full max-w-250 flex-row items-center justify-between rounded-md bg-white p-3 transition-transform duration-300 ${
-        isMenuOpen ? "rounded-b-none border-b border-gray-200" : ""
-      }`}
-    >
-      <div className="font-semibold">
-        {Employee.firstName + " " + Employee.lastName}
+    <div className="w-full rounded-md shadow-lg transition-all duration-300">
+      <div
+        className={`flex w-full max-w-250 flex-row items-center justify-between rounded-md bg-white p-3 transition-transform duration-300 ${
+          isMenuOpen ? "rounded-b-none border-b border-gray-200" : ""
+        }`}
+      >
+        <div className="font-semibold">
+          {Employee.firstName + " " + Employee.lastName}
+        </div>
+        <div className="flex flex-row gap-5">
+          <div
+            className={`${getRoleBackgroundColor(
+              Employee.role,
+            )} flex h-8 items-center rounded-md px-2`}
+          >
+            {Employee.role}
+          </div>
+          <img
+            className={`h-8 cursor-pointer rounded-md p-1 transition-transform duration-300 hover:bg-gray-300 ${
+              isMenuOpen ? "rotate-0" : "rotate-90"
+            }`}
+            src="arrow.png"
+            onClick={toggleMenu}
+          />
+        </div>
       </div>
-      <div className="flex flex-row gap-5">
-        <div
-          className={`${getRoleBackgroundColor(
-            Employee.role,
-          )} flex h-8 items-center rounded-md px-2`}
-        >
-          {Employee.role}
-        </div>
-        <img
-          className={`h-8 cursor-pointer rounded-md p-1 transition-transform duration-300 hover:bg-gray-300 ${
-            isMenuOpen ? "rotate-0" : "rotate-90"
-          }`}
-          src="arrow.png"
-          onClick={toggleMenu}
-        />
-      </div>
-    </div>
 
-    {/** Dropdown */}
-    <div
-      className={`overflow-hidden transition-all duration-300 ease-in-out ${
-        isMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-      }`}
-    >
-      <div className="flex flex-col gap-6 rounded-b-md border-t-0 border-gray-200 bg-white p-6">
-        <div>
-          <InputTitle Title={"Vorname"} />
-          <TextInput
-            value={editData.firstName}
-            onChange={(e) => handleInputChange("firstName", e.target.value)}
-            placeHolder={"Vorname eingeben"}
-          />
-        </div>
+      {/** Dropdown */}
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+          isMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="flex flex-col gap-6 rounded-b-md border-t-0 border-gray-200 bg-white p-6">
+          <div>
+            <InputTitle Title={"Rolle"} />
+            <Dropdown
+              value={editData.role}
+              onChange={(e) => handleInputChange("role", e.target.value)}
+              options={roles}
+            />
+          </div>
 
-        <div>
-          <InputTitle Title={"Nachname"} />
-          <TextInput
-            value={editData.lastName}
-            onChange={(e) => handleInputChange("lastName", e.target.value)}
-            placeHolder={"Nachname eingeben"}
-          />
-        </div>
+          <div>
+            <InputTitle Title={"Vorname"} />
+            <TextInput
+              value={editData.firstName}
+              onChange={(e) => handleInputChange("firstName", e.target.value)}
+              placeHolder={"Vorname eingeben"}
+            />
+          </div>
 
-        <div>
-          <InputTitle Title={"Rolle"} />
-          <Dropdown
-            value={editData.role}
-            onChange={(e) => handleInputChange("role", e.target.value)}
-            options={roles}
-          />
-        </div>
+          <div>
+            <InputTitle Title={"Nachname"} />
+            <TextInput
+              value={editData.lastName}
+              onChange={(e) => handleInputChange("lastName", e.target.value)}
+              placeHolder={"Nachname eingeben"}
+            />
+          </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center justify-between pt-2">
-          <div className="flex w-full justify-between">
-            <div className="flex gap-2">
+          {/* Action Buttons */}
+          <div className="flex items-center justify-between pt-2">
+            <div className="flex w-full justify-between">
+              <div className="flex gap-2">
+                <Button
+                  style={"primary"}
+                  text={"Speichern"}
+                  onClick={handleSave}
+                />
+                <Button
+                  style={"secondary"}
+                  text={"Abbrechen"}
+                  onClick={handleCancel}
+                />
+              </div>
               <Button
-                style={"primary"}
-                text={"Speichern"}
-                onClick={handleSave}
-              />
-              <Button
-                style={"secondary"}
-                text={"Abbrechen"}
-                onClick={handleCancel}
+                style={"cancel"}
+                text={"Mitarbeiter entlasten"}
+                onClick={handleDelete}
               />
             </div>
-            <Button
-              style={"cancel"}
-              text={"Mitarbeiter entlasten"}
-              onClick={handleDelete}
-            />
           </div>
         </div>
       </div>
     </div>
-  </div>
   );
 }
 

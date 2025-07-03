@@ -11,7 +11,7 @@ function ProductList({ handleReload, categoryFilter }) {
     const products = await getProducts(categoryFilter);
 
     if (products) {
-      const processedEmployees = products.map((product, index) => (
+      const processedProducts = products.map((product, index) => (
         <ProductItem
           Product={product}
           key={`product-${index}`}
@@ -20,7 +20,7 @@ function ProductList({ handleReload, categoryFilter }) {
           handleReload={handleReload}
         />
       ));
-      setProductComponents(processedEmployees);
+      setProductComponents(processedProducts);
     }
   }, [setProductComponents, handleReload, categoryFilter]);
 

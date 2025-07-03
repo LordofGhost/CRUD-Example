@@ -34,12 +34,11 @@ The Api can be tested with `Swagger` at this localhost address `http://localhost
 - [x] Seperate Employees DB
 - [x] Integrate dotnet identity in the project
 - [x] Shelf view (create, update, delete)
-- [ ] CashRegister view (sell products)
+- [x] CashRegister view (sell products)
 - [ ] Analyse view
 - [ ] Custom Product images
 
 ## Bugs
-
 
 ## Questions
 

@@ -10,6 +10,7 @@ function CashRegister() {
   const [shoppingCart, setShoppingCart] = useState([]);
   const [showWarning, setShowWarning] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleProductSelect = useCallback(async (productId) => {
     const newProduct = await getProduct(productId);
@@ -94,6 +95,7 @@ function CashRegister() {
     const result = await sellProduct(shoppingCart);
     if (result) {
       setShoppingCart([]);
+      setRefreshKey((oldKey) => oldKey + 1);
     } else {
       setShowWarning(true);
       setTimeout(() => setShowWarning(false), 6000);
@@ -107,18 +109,24 @@ function CashRegister() {
   return (
     <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
       <div className="max-w-1/2 flex-1">
-        <ProductList categoryFilter={"Alle"} onClick={handleProductSelect} />
+        <ProductList
+          categoryFilter={"Alle"}
+          onClick={handleProductSelect}
+          key={refreshKey}
+        />
       </div>
       <div className="w-1 bg-gray-300"></div>
       <div className="flex-1">
         <div className="flex h-full flex-col">
           <div className="pt-7 text-center text-2xl">Warenkorb</div>
           {showWarning && (
-            <Warning
-              text={
-                "Produkte nicht dem Warenkorb hinzugefügt werden! Überprüfe ob für die ausgewählten Produkte auch ausreichende Stückzahlen in den Regalen liegen."
-              }
-            />
+            <div className="p-7">
+              <Warning
+                text={
+                  "Produkte nicht dem Warenkorb hinzugefügt werden! Überprüfe ob für die ausgewählten Produkte auch ausreichende Stückzahlen in den Regalen liegen."
+                }
+              />
+            </div>
           )}
           <div className="flex flex-1 flex-col overflow-hidden">
             <div className="mb-7 flex flex-1 flex-col gap-4 overflow-y-auto px-7 py-3">

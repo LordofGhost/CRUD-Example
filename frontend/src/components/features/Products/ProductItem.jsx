@@ -42,18 +42,33 @@ function ProductItem({ Product, handleReload, onClick, editable, showStock }) {
           <div>
             {Product.shelfId ? `Regal ${Product.shelfId}` : "Kein Regal"}
           </div>
-          <div>{Product.sellingPrice}€</div>
-          <div className="flex gap-2">
-            <div className="flex gap-1 rounded-md bg-indigo-400 px-1">
-              <div>Lager</div>
-              <div>{Product.inStock}</div>
+          <div className="flex flex-row items-center gap-2">
+            <div
+              className={!showStock ? "w-fit rounded-md bg-red-300 px-1" : ""}
+            >
+              {Product.sellingPrice}€
             </div>
-            <div className="flex gap-1 rounded-md bg-yellow-400 px-1">
-              <div>Regal</div>
-              <div>{Product.onTheShelf}</div>
-            </div>
+            {!showStock && (
+              <div className="flex gap-1 rounded-md bg-yellow-300 px-1">
+                <div>Regal</div>
+                <div>{Product.onTheShelf}</div>
+              </div>
+            )}
           </div>
+          {showStock && (
+            <div className="flex gap-2">
+              <div className="flex gap-1 rounded-md bg-indigo-300 px-1">
+                <div>Lager</div>
+                <div>{Product.inStock}</div>
+              </div>
+              <div className="flex gap-1 rounded-md bg-yellow-300 px-1">
+                <div>Regal</div>
+                <div>{Product.onTheShelf}</div>
+              </div>
+            </div>
+          )}
         </div>
+
         <div className="flex flex-col justify-between">
           {editable && (
             <>
