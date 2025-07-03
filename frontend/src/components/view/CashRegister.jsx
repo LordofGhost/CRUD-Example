@@ -4,14 +4,39 @@ import { sellProduct } from "../../services/Stock";
 import Button from "../common/Button";
 import Warning from "../common/Warning";
 import { getProduct } from "../../services/Products";
+import SellItem from "../features/CashRegister/SellItem";
 
 function CashRegister() {
   const [shoppingCart, setShoppingCart] = useState([]);
   const [showWarning, setShowWarning] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [productComponents, setProductComponents] = useState([
-    <div key={1}></div>,
-  ]);
+
+  const handleProductSelect = useCallback(async (productId) => {
+    const newProduct = await getProduct(productId);
+    if (!newProduct) return;
+
+    setShoppingCart((prev) => {
+      if (newProduct.onTheShelf <= 0) {
+        setShowWarning(true);
+        setTimeout(() => setShowWarning(false), 6000);
+        return prev;
+      }
+
+      const existingProduct = prev.find(
+        (product) => product.productId === Number(productId),
+      );
+
+      if (existingProduct) {
+        return prev.map((item) =>
+          item.productId === Number(productId)
+            ? { ...item, amount: item.amount + 1 }
+            : item,
+        );
+      } else {
+        return [...prev, { ...newProduct, amount: 1 }];
+      }
+    });
+  }, []);
 
   // Scanner
   useEffect(() => {
@@ -34,39 +59,21 @@ function CashRegister() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [handleProductSelect]);
 
   // Get total price
   useEffect(() => {
-    var totalProceTemp;
+    var totalProceTemp = 0;
 
     shoppingCart.forEach((product) => {
-      totalProceTemp += product.sellingPrice;
+      totalProceTemp += product.sellingPrice * product.amount;
     });
 
     setTotalPrice(totalProceTemp);
   }, [shoppingCart, setTotalPrice]);
 
-  function handleProductSelect(productId) {
-    setShoppingCart(async (prev) => {
-      const existingProduct = prev.find(
-        (product) => product.productId === productId,
-      );
-      if (existingProduct) {
-        return prev.map((item) =>
-          item.productId === productId
-            ? { ...item, amount: item.amount + 1 }
-            : item,
-        );
-      } else {
-        const newProduct = await getProduct(productId);
-        return [...prev, { ...newProduct, amount: 1 }];
-      }
-    });
-  }
-
-  function handleAmountChange(product, amount) {
-    if (amount > 1 && amount <= product.onTheShelf) {
+  const handleAmountChange = useCallback((product, amount) => {
+    if (amount >= 1 && amount <= product.onTheShelf) {
       setShoppingCart((prev) => {
         return prev.map((item) =>
           item.productId === product.productId
@@ -75,13 +82,13 @@ function CashRegister() {
         );
       });
     }
-  }
+  }, []);
 
-  function handleProductRemove(product) {
+  const handleProductRemove = useCallback((product) => {
     setShoppingCart((prev) =>
       prev.filter((item) => item.productId !== product.productId),
     );
-  }
+  }, []);
 
   async function handleSell() {
     const result = await sellProduct(shoppingCart);
@@ -97,26 +104,6 @@ function CashRegister() {
     setShoppingCart([]);
   }
 
-  const renderProducts = useCallback(async () => {
-    if (shoppingCart.length > 0) {
-      const processedProducts = await shoppingCart.map(
-        async (product, index) => (
-          <SellItem
-            key={`sellProduct-${index}`}
-            product={product}
-            handleAmountChange={handleAmountChange}
-            handleProductRemove={handleProductRemove}
-          />
-        ),
-      );
-      setProductComponents(processedProducts);
-    }
-  }, [shoppingCart, handleAmountChange, handleProductRemove]);
-
-  useEffect(() => {
-    renderProducts();
-  }, [renderProducts]);
-
   return (
     <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
       <div className="max-w-1/2 flex-1">
@@ -124,21 +111,28 @@ function CashRegister() {
       </div>
       <div className="w-1 bg-gray-300"></div>
       <div className="flex-1">
-        <div className="flex h-full flex-col p-7">
-          <div className="mb-3 text-center text-2xl">Warenkorb</div>
+        <div className="flex h-full flex-col">
+          <div className="pt-7 text-center text-2xl">Warenkorb</div>
           {showWarning && (
             <Warning
               text={
-                "Produkte konnten nicht verkauft werden! Überprüfe ob für die ausgewählten Produkte auch ausreichende Stückzahlen in den Regalen liegen oder ob Produkte ausgewählt sind."
+                "Produkte nicht dem Warenkorb hinzugefügt werden! Überprüfe ob für die ausgewählten Produkte auch ausreichende Stückzahlen in den Regalen liegen."
               }
             />
           )}
-          <div className="flex flex-1 flex-col">
-            <div className="mb-7 flex flex-1 flex-col justify-end gap-4">
-              {productComponents}
+          <div className="flex flex-1 flex-col overflow-hidden">
+            <div className="mb-7 flex flex-1 flex-col gap-4 overflow-y-auto px-7 py-3">
+              {shoppingCart.map((product, index) => (
+                <SellItem
+                  key={`sellProduct-${index}`}
+                  product={product}
+                  handleAmountChange={handleAmountChange}
+                  handleProductRemove={handleProductRemove}
+                />
+              ))}
             </div>
-            <div className="flex w-full justify-between">
-              <div className="items-center">{totalPrice}€</div>
+            <div className="flex w-full justify-between px-7 pb-7">
+              <Button style={"cancel"} onClick={null} text={`${totalPrice}€`} />
               <div className="flex gap-2">
                 <Button
                   style={"cancel"}
