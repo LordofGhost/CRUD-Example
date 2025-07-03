@@ -30,7 +30,7 @@ function Manager() {
   return (
     <>
       <Header
-        Views={["Produkte", "Regale", "Angestellte", "Analyse"]}
+        Views={["Produkte", "Regale", "Angestellte" /*, "Analyse"**/]}
         StartView={"Produkte"}
         onActiveViewChange={handleViewChange}
       />
