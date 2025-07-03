@@ -62,11 +62,11 @@ public class ShelvesController : ControllerBase
             return BadRequest("Duplicate product IDs are not allowed in the same shelf.");
         }
 
-        foreach (int? ProductId in updateShelfRequest.ProductIds)
+        foreach (ulong? ProductId in updateShelfRequest.ProductIds)
         {
             if (ProductId != null)
             {
-                if (await CheckForProductReference((int)ProductId, shelf.ShelfId))
+                if (await CheckForProductReference((ulong)ProductId, shelf.ShelfId))
                 {
                     return BadRequest("Product reference allready exists!");
                 }
@@ -109,13 +109,13 @@ public class ShelvesController : ControllerBase
         return _context.Shelves.Any(e => e.ShelfId == ShelfId);
     }
 
-    private async Task<bool> RemoveShelfIdReferences(int?[] ProductIds)
+    private async Task<bool> RemoveShelfIdReferences(ulong?[] productIds)
     {
-        foreach (int? ProductId in ProductIds)
+        foreach (ulong? productId in productIds)
         {
-            if (ProductId != null)
+            if (productId != null)
             {
-                var product = await _context.Products.FindAsync(ProductId);
+                var product = await _context.Products.FindAsync(productId);
                 if (product != null)
                 {
                     product.ShelfId = null;
@@ -126,16 +126,16 @@ public class ShelvesController : ControllerBase
         return true;
     }
 
-    private async Task<bool> AddShelfIdReferences(int?[] ProductIds, int ShelfId)
+    private async Task<bool> AddShelfIdReferences(ulong?[] productIds, int shelfId)
     {
-        foreach (int? ProductId in ProductIds)
+        foreach (ulong? productId in productIds)
         {
-            if (ProductId != null)
+            if (productId != null)
             {
-                var product = await _context.Products.FindAsync(ProductId);
+                var product = await _context.Products.FindAsync(productId);
                 if (product != null)
                 {
-                    product.ShelfId = ShelfId;
+                    product.ShelfId = shelfId;
                     _context.Entry(product).State = EntityState.Modified;
                 }
             }
@@ -143,18 +143,18 @@ public class ShelvesController : ControllerBase
         return true;
     }
 
-    private async Task<bool> CheckForProductReference(int checkProductId, int ShelfId)
+    private async Task<bool> CheckForProductReference(ulong checkProductId, int ShelfId)
     {
         var shelves = await _context.Shelves.ToListAsync();
         foreach (var shelf in shelves)
         {
             // Skip current Shelf
             if (shelf.ShelfId == ShelfId) continue;
-            foreach (int? ProductId in shelf.ProductIds)
+            foreach (ulong? ProductId in shelf.ProductIds)
             {
                 if (ProductId != null)
                 {
-                    if ((int)ProductId == checkProductId) return true;
+                    if ((ulong)ProductId == checkProductId) return true;
                 }
             }
         }
