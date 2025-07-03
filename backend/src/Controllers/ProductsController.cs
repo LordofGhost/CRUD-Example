@@ -57,7 +57,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{ProductId}")]
-    public async Task<ActionResult<Models.Products.PRequest>> GetProduct(int ProductId)
+    public async Task<ActionResult<Models.Products.PRequest>> GetProduct(ulong ProductId)
     {
         var product = await _context.Products.FindAsync(ProductId);
         var stock = await _context.Stock
@@ -108,7 +108,7 @@ public class ProductsController : ControllerBase
 
     [HttpPatch("{ProductId}")]
     [Authorize(Roles = "Manager")]
-    public async Task<ActionResult<Models.Products.Product>> UpdateProduct(int ProductId, Models.Products.Product product)
+    public async Task<ActionResult<Models.Products.Product>> UpdateProduct(ulong ProductId, Models.Products.Product product)
     {
         // Remove old Product
         var oldProduct = await _context.Products.FindAsync(ProductId);
@@ -119,7 +119,7 @@ public class ProductsController : ControllerBase
         // Delete Shelf reference if ProductId changes
         if (ProductId != product.ProductId)
         {
-            await DeleteReferencesInShelves(ProductId);
+            await UpdateReferencesInShelves(ProductId, product.ProductId);
             await UpdateReferencesInStock(ProductId, product.ProductId);
         } 
         _context.Products.Remove(oldProduct);
@@ -131,7 +131,7 @@ public class ProductsController : ControllerBase
 
     [HttpDelete("{ProductId}")]
     [Authorize(Roles = "Manager")]
-    public async Task<IActionResult> DeleteProduct(int ProductId)
+    public async Task<IActionResult> DeleteProduct(ulong ProductId)
     {
         var product = await _context.Products.FindAsync(ProductId);
         if (product == null)
@@ -147,12 +147,12 @@ public class ProductsController : ControllerBase
         return NoContent();
     }
 
-    private bool ProductExists(int ProductId)
+    private bool ProductExists(ulong ProductId)
     {
         return _context.Products.Any(e => e.ProductId == ProductId);
     }
 
-    private async Task<bool> DeleteReferencesInShelves(int deleteProductId)
+    private async Task<bool> DeleteReferencesInShelves(ulong deleteProductId)
     {
         var shelves = await _context.Shelves.ToListAsync();
         foreach (var shelf in shelves)
@@ -172,7 +172,27 @@ public class ProductsController : ControllerBase
         return true;
     }
 
-    private async Task<bool> DeleteReferencesInStock(int deleteProductId)
+   private async Task<bool> UpdateReferencesInShelves(ulong deleteProductId, ulong newProductId)
+    {
+        var shelves = await _context.Shelves.ToListAsync();
+        foreach (var shelf in shelves)
+        {
+            for (int index = 0; index < shelf.ProductIds.Length; index++)
+            {
+                if (shelf.ProductIds[index] != null)
+                {
+                    if (shelf.ProductIds[index] == deleteProductId)
+                    {
+                        shelf.ProductIds[index] = newProductId;
+                        _context.Entry(shelf).State = EntityState.Modified;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private async Task<bool> DeleteReferencesInStock(ulong deleteProductId)
     {
         var stocks = await _context.Stock.ToListAsync();
         foreach (var stock in stocks)
@@ -185,7 +205,7 @@ public class ProductsController : ControllerBase
         return true;
     }
 
-    private async Task<bool> UpdateReferencesInStock(int oldProductId, int newProductId)
+    private async Task<bool> UpdateReferencesInStock(ulong oldProductId, ulong newProductId)
     {
         var stocks = await _context.Stock.ToListAsync();
         foreach (var stock in stocks)
