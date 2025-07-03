@@ -29,7 +29,7 @@ function ProductItem({ Product, handleReload, onClick, editable, showStock }) {
 
   return (
     <div
-      className="flex max-w-100 min-w-64 flex-1 flex-col rounded-md shadow-lg"
+      className={`flex max-w-100 min-w-64 flex-1 flex-col rounded-md shadow-lg ${onClick != null ? "cursor-pointer" : ""} select-none`}
       onClick={onClick}
     >
       <div className="border-b border-gray-200">

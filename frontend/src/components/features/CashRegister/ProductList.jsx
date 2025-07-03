@@ -22,7 +22,7 @@ function ProductList({ categoryFilter, onClick }) {
       ));
       setProductComponents(processedEmployees);
     }
-  }, [setProductComponents, categoryFilter]);
+  }, [setProductComponents, categoryFilter, onClick]);
 
   useEffect(() => {
     renderProducts();
