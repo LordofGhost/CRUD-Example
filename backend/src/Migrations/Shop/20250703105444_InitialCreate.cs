@@ -15,7 +15,7 @@ namespace JupiterApi.src.Migrations.Shop
                 name: "Products",
                 columns: table => new
                 {
-                    ProductId = table.Column<int>(type: "INTEGER", nullable: false)
+                    ProductId = table.Column<ulong>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
@@ -51,7 +51,7 @@ namespace JupiterApi.src.Migrations.Shop
                 {
                     StockId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ProductId = table.Column<ulong>(type: "INTEGER", nullable: false),
                     InStock = table.Column<int>(type: "INTEGER", nullable: false),
                     OnTheShelf = table.Column<int>(type: "INTEGER", nullable: false),
                     PurchasedToday = table.Column<int>(type: "INTEGER", nullable: false),

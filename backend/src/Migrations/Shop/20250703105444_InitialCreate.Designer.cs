@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JupiterApi.src.Migrations.Shop
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20250701115415_InitialCreate")]
+    [Migration("20250703105444_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -22,7 +22,7 @@ namespace JupiterApi.src.Migrations.Shop
 
             modelBuilder.Entity("Jupiter.Models.Products.Product", b =>
                 {
-                    b.Property<int>("ProductId")
+                    b.Property<ulong>("ProductId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -90,7 +90,7 @@ namespace JupiterApi.src.Migrations.Shop
                     b.Property<int>("OnTheShelf")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ProductId")
+                    b.Property<ulong>("ProductId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("PurchasedToday")

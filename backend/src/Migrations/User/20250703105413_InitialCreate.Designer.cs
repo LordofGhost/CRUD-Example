@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JupiterApi.src.Migrations.User
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20250701115359_InitialCreate")]
+    [Migration("20250703105413_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

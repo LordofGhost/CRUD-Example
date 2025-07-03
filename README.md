@@ -38,7 +38,11 @@ The Api can be tested with `Swagger` at this localhost address `http://localhost
 - [ ] Analyse view
 - [ ] Custom Product images
 
-## Bugs
+## Difficulties
+
+- Handeling big numbers as product ids
+- Creating relations between shelves and products
+- Creating a identity system with login
 
 ## Questions
 
