@@ -42,7 +42,7 @@ function Login() {
         onActiveViewChange={() => {}}
       />
 
-      <div className="flex h-200 flex-grow items-center justify-center">
+      <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
         <div className="mx-4 flex w-full max-w-md flex-col rounded-lg p-10 shadow-lg">
           <h2 className="mb-3 text-center text-2xl font-semibold">Anmeldung</h2>
           <div className="mb-8 text-center">
