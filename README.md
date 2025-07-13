@@ -5,6 +5,9 @@ The main function is a user administration with 3 different roles (cashier, shel
 It was created as part of an exercise project where the focus was on learning and first contact with dotnet and React.
 The name `Jupiter` has its origins in a play on words based on the electronics store `Saturn`.
 
+![IMG_0078-2](https://github.com/user-attachments/assets/219643d0-20af-48e7-a1fc-f9965059f891)
+*Here you can see the project in action, which was presented as part of the “Tag der Ausbildung" at Rosenberger. It was set up in a separate network consisting of a tablet, office workstation, server, and cash register.*
+
 ## Setup
 
 1. Install frontend by running `npm install` inside the `frontend` folder
